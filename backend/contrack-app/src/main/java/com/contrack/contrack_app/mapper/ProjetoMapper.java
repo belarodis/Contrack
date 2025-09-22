@@ -9,7 +9,7 @@ import org.mapstruct.*;
 @Mapper(config = MapStructCentralConfig.class)
 public interface ProjetoMapper {
 
-    ProjetoViewDTO toView(Projeto entity);
+    ProjetoViewDTO toDto(Projeto entity);
 
     @Mapping(target = "id", ignore = true)
     Projeto toEntity(ProjetoCreateDTO dto);

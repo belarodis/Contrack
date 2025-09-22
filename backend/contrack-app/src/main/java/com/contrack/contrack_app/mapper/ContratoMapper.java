@@ -12,7 +12,7 @@ public interface ContratoMapper {
     // VIEW
     @Mapping(target = "pessoaId", source = "pessoa.id")
     @Mapping(target = "perfilId", source = "perfil.id")
-    ContratoViewDTO toView(Contrato entity);
+    ContratoViewDTO toDto(Contrato entity);
 
     // CREATE -> ENTITY
     @Mapping(target = "id", ignore = true)

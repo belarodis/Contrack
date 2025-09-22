@@ -10,7 +10,7 @@ import org.mapstruct.*;
 public interface PessoaMapper {
 
     // VIEW
-    PessoaViewDTO toView(Pessoa entity);
+    PessoaViewDTO toDto(Pessoa entity);
 
     // CREATE -> ENTITY
     @Mapping(target = "id", ignore = true)

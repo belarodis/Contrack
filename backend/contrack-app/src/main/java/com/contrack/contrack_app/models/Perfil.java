@@ -19,6 +19,7 @@ public class Perfil {
     public enum TipoPerfil {
         GERENTE,
         DEV,
-        QA
+        QA,
+        SECURITY
     }
 }

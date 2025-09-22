@@ -12,7 +12,7 @@ public interface AlocacaoMapper {
     // VIEW
     @Mapping(target = "pessoaId", source = "pessoa.id")
     @Mapping(target = "projetoId", source = "projeto.id")
-    AlocacaoViewDTO toView(Alocacao entity);
+    AlocacaoViewDTO toDto(Alocacao entity);
 
     // CREATE -> ENTITY
     @Mapping(target = "id", ignore = true)

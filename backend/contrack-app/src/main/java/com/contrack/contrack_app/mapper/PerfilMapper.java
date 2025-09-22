@@ -11,7 +11,7 @@ public interface PerfilMapper {
 
     // VIEW
     @Mapping(target = "tipo", expression = "java(entity.getTipo().name())")
-    PerfilViewDTO toView(Perfil entity);
+    PerfilViewDTO toDto(Perfil entity);
 
     // CREATE -> ENTITY
     @Mapping(target = "id", ignore = true)
