@@ -24,8 +24,6 @@ jobs:
       - name: Build and run tests (Maven)
         run: mvn -B clean install
         working-directory: backend/contrack-app
-        # -B = batch mode (menos output interativo)
-        # clean install = compile + tests + gera jar
 
       - name: Upload JAR artifact
         if: success()
