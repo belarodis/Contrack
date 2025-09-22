@@ -1,0 +1,35 @@
+name: CI - Spring Boot (Maven)
+
+on:
+  push:
+    branches: ["main", "develop"]
+  pull_request:
+    branches: ["main", "develop"]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Setup JDK 21 (Temurin) and cache Maven deps
+        uses: actions/setup-java@v3
+        with:
+          distribution: "temurin"
+          java-version: "21"
+          cache: "maven"
+
+      - name: Build and run tests (Maven)
+        run: mvn -B clean install
+        working-directory: backend/contrack-app
+        # -B = batch mode (menos output interativo)
+        # clean install = compile + tests + gera jar
+
+      - name: Upload JAR artifact
+        if: success()
+        uses: actions/upload-artifact@v4
+        with:
+          name: spring-boot-jar
+          path: target/*.jar
