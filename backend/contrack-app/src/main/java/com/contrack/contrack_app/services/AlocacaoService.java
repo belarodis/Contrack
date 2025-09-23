@@ -11,6 +11,7 @@ import com.contrack.contrack_app.repositories.interfaces.IAlocacaoRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -28,6 +29,10 @@ public class AlocacaoService {
         this.projetoService = projetoService;
         this.perfilService = perfilService;
         this.alocacaoMapper = alocacaoMapper;
+    }
+
+    public Optional<Alocacao> buscarAlocacaoPorId(Long id) {
+        return alocacaoRepository.findById(id);
     }
 
     public List<AlocacaoViewDTO> buscarAlocacoes() {
