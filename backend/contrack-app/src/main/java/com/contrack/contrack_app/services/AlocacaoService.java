@@ -1,35 +1,63 @@
 package com.contrack.contrack_app.services;
 
+import com.contrack.contrack_app.dto.create.AlocacaoCreateDTO;
+import com.contrack.contrack_app.dto.view.AlocacaoViewDTO;
+import com.contrack.contrack_app.mapper.AlocacaoMapper;
 import com.contrack.contrack_app.models.Alocacao;
 import com.contrack.contrack_app.models.Perfil;
+import com.contrack.contrack_app.models.Pessoa;
 import com.contrack.contrack_app.models.Projeto;
 import com.contrack.contrack_app.repositories.interfaces.IAlocacaoRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class AlocacaoService {
 
     private final IAlocacaoRepository alocacaoRepository;
+    private final PessoaService pessoaService;
+    private final ProjetoService projetoService;
+    private final PerfilService perfilService;
+    private final AlocacaoMapper alocacaoMapper;
 
-    public AlocacaoService(IAlocacaoRepository alocacaoRepository) {
+    public AlocacaoService(IAlocacaoRepository alocacaoRepository, PessoaService pessoaService, ProjetoService projetoService, PerfilService perfilService, AlocacaoMapper alocacaoMapper) {
         this.alocacaoRepository = alocacaoRepository;
+        this.pessoaService = pessoaService;
+        this.projetoService = projetoService;
+        this.perfilService = perfilService;
+        this.alocacaoMapper = alocacaoMapper;
     }
 
-
-    public List<Alocacao> BuscarAlocacoes(){
-        return alocacaoRepository.findAll();
+    public List<AlocacaoViewDTO> buscarAlocacoes() {
+        return alocacaoRepository.findAll()
+                .stream()
+                .map(alocacaoMapper::toDto)
+                .collect(Collectors.toList());
     }
 
-    public Alocacao criarAlocacao(Alocacao novaAlocacao) {
-        // uma pessoa não pode ter mais de um perfil no mesmo projeto
+    public AlocacaoViewDTO criarAlocacao(AlocacaoCreateDTO dto) {
+        Pessoa pessoa = pessoaService.buscarPessoaPorId(dto.pessoaId())
+                .orElseThrow(() -> new IllegalArgumentException("Pessoa não encontrada."));
+        Projeto projeto = projetoService.buscarProjetoPorId(dto.projetoId())
+                .orElseThrow(() -> new IllegalArgumentException("Projeto não encontrado."));
+        Perfil perfil = perfilService.buscarPerfilPorId(dto.perfilId())
+                .orElseThrow(() -> new IllegalArgumentException("Perfil não encontrado."));
+
+        // Cria a entidade para a validação
+        Alocacao novaAlocacao = new Alocacao();
+        novaAlocacao.setPessoa(pessoa);
+        novaAlocacao.setProjeto(projeto);
+        novaAlocacao.setPerfil(perfil);
+        novaAlocacao.setHorasSemana(dto.horasSemana());
+
+        // Validações
         List<Alocacao> alocacoesNoProjeto = alocacaoRepository.findByPessoaAndProjeto(novaAlocacao.getPessoa(), novaAlocacao.getProjeto());
         if (!alocacoesNoProjeto.isEmpty()) {
             throw new IllegalArgumentException("Essa pessoa já está alocada neste projeto.");
         }
 
-        // o total de horas semanais não pode ultrapassar 40
         int horasAtuaisAlocadas = alocacaoRepository.findByPessoa(novaAlocacao.getPessoa())
                 .stream()
                 .mapToInt(Alocacao::getHorasSemana)
@@ -39,7 +67,8 @@ public class AlocacaoService {
             throw new IllegalArgumentException("O total de horas semanais para esta pessoa excederá 40.");
         }
 
-        return alocacaoRepository.save(novaAlocacao);
+        Alocacao alocacaoSalva = alocacaoRepository.save(novaAlocacao);
+        return alocacaoMapper.toDto(alocacaoSalva);
     }
 
     public boolean verificarComposicaoTime(Projeto projeto) {
