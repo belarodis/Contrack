@@ -20,29 +20,32 @@ INSERT INTO projeto (nome, data_inicio, data_fim, descricao) VALUES
      ('PUCRS/DELL IT Academy #22',   DATE '2025-06-12', DATE '2026-01-05', 'Treinamento da Cohort #22');
 
 INSERT INTO contrato (data_inicio, data_fim, horas_semana, salario_hora, pessoa_id, perfil_id) VALUES
-   (DATE '2024-01-01', DATE '2024-12-31', 30,  80.00, 1, 2), -- Henrique M. -> DEV
-   (DATE '2024-02-01', DATE '2024-12-31', 30,  80.00, 2, 2), -- Henrique S. -> DEV
-   (DATE '2024-03-01', DATE '2024-12-31', 30,  70.00, 3, 3), -- Isabela -> QA
-   (DATE '2024-04-01', DATE '2024-12-31',  8,  90.00, 4, 4), -- João -> SECURITY
-   (DATE '2024-05-01', DATE '2024-12-31', 40, 120.00, 5, 1); -- Gabriel -> GERENTE
+   (DATE '2024-01-01', DATE '2026-12-31', 30,  80.00, 1, 2), -- Henrique M. -> DEV
+   (DATE '2024-02-01', DATE '2026-12-31', 30,  80.00, 2, 2), -- Henrique S. -> DEV
+   (DATE '2024-01-01', DATE '2026-12-31', 30,  70.00, 3, 3), -- Isabela -> QA
+   (DATE '2024-01-01', DATE '2026-12-31',  30,  90.00, 4, 4), -- João -> SECURITY
+   (DATE '2024-01-01', DATE '2026-12-31', 40, 120.00, 5, 1); -- Gabriel -> GERENTE
 -- Projeto 1: Realidade Virtual
 INSERT INTO alocacao (horas_semana, pessoa_id, projeto_id) VALUES
    (8,  5, 1),  -- Gabriel (GERENTE)
    (10, 1, 1),  -- Henrique M. (DEV)
    (6,  3, 1),  -- Isabela (QA)
-   (8,  4, 1);  -- João (SECURITY extra)
+   (8,  4, 1);  -- João (SECURITY)
 
 -- Projeto 2: AGES 4
 INSERT INTO alocacao (horas_semana, pessoa_id, projeto_id) VALUES
    (8,  5, 2),  -- Gabriel (GERENTE)
    (16, 2, 2),  -- Henrique S. (DEV)
-   (6,  3, 2);  -- Isabela (QA)
+   (6,  3, 2), -- Isabela (QA)
+   (12,  4, 1);  -- João (SECURITY)
+
 
 -- Projeto 3: Criptomoedas
 INSERT INTO alocacao (horas_semana, pessoa_id, projeto_id) VALUES
    (8,  5, 3),  -- Gabriel (GERENTE)
    (10, 1, 3),  -- Henrique M. (DEV)
-   (6,  3, 3);  -- Isabela (QA)
+   (6,  3, 3),  -- Isabela (QA)
+   (10,  4, 1);  -- João (SECURITY)
 
 -- Projeto 4: Contrack
 INSERT INTO alocacao (horas_semana, pessoa_id, projeto_id) VALUES
