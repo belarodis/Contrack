@@ -10,7 +10,7 @@ import org.mapstruct.*;
 public interface PerfilMapper {
 
     // VIEW
-    @Mapping(target = "tipo", expression = "java(entity.getTipo().name())")
+    @Mapping(target = "tipo", expression = "java(entity.getTipo())")
     PerfilViewDTO toDto(Perfil entity);
 
     // CREATE -> ENTITY
