@@ -8,6 +8,7 @@ import com.contrack.contrack_app.repositories.interfaces.IProjetoRepository;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -31,6 +32,10 @@ public class ProjetoService {
 
     public Optional<Projeto> buscarProjetoPorId(Long id) {
         return projetoRepository.findById(id);
+    }
+
+    public List<Projeto> buscarProjetos() {
+        return projetoRepository.findAll();
     }
 
     // --- Lógica de cálculo de custo ---

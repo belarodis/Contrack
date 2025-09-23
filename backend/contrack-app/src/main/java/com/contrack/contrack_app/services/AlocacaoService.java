@@ -17,6 +17,11 @@ public class AlocacaoService {
         this.alocacaoRepository = alocacaoRepository;
     }
 
+
+    public List<Alocacao> BuscarAlocacoes(){
+        return alocacaoRepository.findAll();
+    }
+
     public Alocacao criarAlocacao(Alocacao novaAlocacao) {
         // uma pessoa não pode ter mais de um perfil no mesmo projeto
         List<Alocacao> alocacoesNoProjeto = alocacaoRepository.findByPessoaAndProjeto(novaAlocacao.getPessoa(), novaAlocacao.getProjeto());

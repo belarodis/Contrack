@@ -17,6 +17,14 @@ public class ContratoService {
         this.contratoRepository = contratoRepository;
     }
 
+    public Optional<Contrato> BuscarContratoPorId(Long idContrato){
+        return contratoRepository.findById(idContrato);
+    }
+
+    public List<Contrato> BuscarContratos() {
+        return contratoRepository.findAll();
+    }
+
     public Contrato criarContrato(Contrato novoContrato) {
         if (novoContrato.getHorasSemana() > 40) {
             throw new IllegalArgumentException("O número de horas semanais no contrato não pode ser maior que 40.");

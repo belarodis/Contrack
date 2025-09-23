@@ -4,6 +4,7 @@ import com.contrack.contrack_app.models.Pessoa;
 import com.contrack.contrack_app.repositories.interfaces.IPessoaRepository;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -21,5 +22,9 @@ public class PessoaService {
 
     public Optional<Pessoa> buscarPessoaPorId(Long id) {
         return pessoaRepository.findById(id);
+    }
+
+    public List<Pessoa> buscarPessoas() {
+        return pessoaRepository.findAll();
     }
 }
