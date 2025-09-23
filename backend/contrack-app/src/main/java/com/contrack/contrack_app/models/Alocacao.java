@@ -22,4 +22,8 @@ public class Alocacao {
     @ManyToOne
     @JoinColumn(name = "projeto_id", nullable = false)
     private Projeto projeto;
+
+    @ManyToOne
+    @JoinColumn(name = "perfil_id", nullable = false)
+    private Perfil perfil;
 }
