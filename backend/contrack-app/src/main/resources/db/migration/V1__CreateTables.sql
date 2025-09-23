@@ -4,6 +4,7 @@ CREATE TABLE alocacao
     horas_semana INT    NOT NULL,
     pessoa_id    BIGINT NOT NULL,
     projeto_id   BIGINT NOT NULL,
+    perfil_id    BIGINT NOT NULL,
     CONSTRAINT pk_alocacao PRIMARY KEY (id)
 );
 
@@ -15,7 +16,6 @@ CREATE TABLE contrato
     horas_semana INT              NOT NULL,
     salario_hora DOUBLE PRECISION NOT NULL,
     pessoa_id    BIGINT           NOT NULL,
-    perfil_id    BIGINT           NOT NULL,
     CONSTRAINT pk_contrato PRIMARY KEY (id)
 );
 
@@ -44,13 +44,13 @@ CREATE TABLE projeto
 );
 
 ALTER TABLE alocacao
+    ADD CONSTRAINT FK_ALOCACAO_ON_PERFIL FOREIGN KEY (perfil_id) REFERENCES perfil (id);
+
+ALTER TABLE alocacao
     ADD CONSTRAINT FK_ALOCACAO_ON_PESSOA FOREIGN KEY (pessoa_id) REFERENCES pessoa (id);
 
 ALTER TABLE alocacao
     ADD CONSTRAINT FK_ALOCACAO_ON_PROJETO FOREIGN KEY (projeto_id) REFERENCES projeto (id);
-
-ALTER TABLE contrato
-    ADD CONSTRAINT FK_CONTRATO_ON_PERFIL FOREIGN KEY (perfil_id) REFERENCES perfil (id);
 
 ALTER TABLE contrato
     ADD CONSTRAINT FK_CONTRATO_ON_PESSOA FOREIGN KEY (pessoa_id) REFERENCES pessoa (id);

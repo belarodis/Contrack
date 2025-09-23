@@ -24,20 +24,15 @@ public class Contrato {
     @JoinColumn(name = "pessoa_id", nullable = false)
     private Pessoa pessoa;
 
-    @ManyToOne
-    @JoinColumn(name = "perfil_id", nullable = false)
-    private Perfil perfil;
-
 
     public Contrato() {}
-    public Contrato(Long id, LocalDate dataInicio, LocalDate dataFim, int horasSemana, double salarioHora, Pessoa pessoa, Perfil perfil) {
+    public Contrato(Long id, LocalDate dataInicio, LocalDate dataFim, int horasSemana, double salarioHora, Pessoa pessoa) {
         this.id = id;
         this.dataInicio = dataInicio;
         this.dataFim = dataFim;
         this.horasSemana = horasSemana;
         this.salarioHora = salarioHora;
         this.pessoa = pessoa;
-        this.perfil = perfil;
     }
 
     public Long getId() {
@@ -88,23 +83,15 @@ public class Contrato {
         this.pessoa = pessoa;
     }
 
-    public Perfil getPerfil() {
-        return perfil;
-    }
-
-    public void setPerfil(Perfil perfil) {
-        this.perfil = perfil;
-    }
-
     @Override
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
         Contrato contrato = (Contrato) o;
-        return horasSemana == contrato.horasSemana && Double.compare(salarioHora, contrato.salarioHora) == 0 && Objects.equals(id, contrato.id) && Objects.equals(dataInicio, contrato.dataInicio) && Objects.equals(dataFim, contrato.dataFim) && Objects.equals(pessoa, contrato.pessoa) && Objects.equals(perfil, contrato.perfil);
+        return horasSemana == contrato.horasSemana && Double.compare(salarioHora, contrato.salarioHora) == 0 && Objects.equals(id, contrato.id) && Objects.equals(dataInicio, contrato.dataInicio) && Objects.equals(dataFim, contrato.dataFim) && Objects.equals(pessoa, contrato.pessoa);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, dataInicio, dataFim, horasSemana, salarioHora, pessoa, perfil);
+        return Objects.hash(id, dataInicio, dataFim, horasSemana, salarioHora, pessoa);
     }
 }
