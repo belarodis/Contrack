@@ -22,13 +22,18 @@ public class Alocacao {
     @JoinColumn(name = "projeto_id", nullable = false)
     private Projeto projeto;
 
+    @ManyToOne
+    @JoinColumn(name = "perfil_id", nullable = false)
+    private Perfil perfil;
+
     public Alocacao(){}
 
-    public Alocacao(Long id, int horasSemana, Pessoa pessoa, Projeto projeto) {
+    public Alocacao(Long id, int horasSemana, Pessoa pessoa, Projeto projeto, Perfil perfil) {
         this.id = id;
         this.horasSemana = horasSemana;
         this.pessoa = pessoa;
         this.projeto = projeto;
+        this.perfil = perfil;
     }
 
     public Long getId() {
@@ -63,15 +68,23 @@ public class Alocacao {
         this.projeto = projeto;
     }
 
+    public Perfil getPerfil() {
+        return perfil;
+    }
+
+    public void setPerfil(Perfil perfil) {
+        this.perfil = perfil;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
         Alocacao alocacao = (Alocacao) o;
-        return horasSemana == alocacao.horasSemana && Objects.equals(id, alocacao.id) && Objects.equals(pessoa, alocacao.pessoa) && Objects.equals(projeto, alocacao.projeto);
+        return horasSemana == alocacao.horasSemana && Objects.equals(id, alocacao.id) && Objects.equals(pessoa, alocacao.pessoa) && Objects.equals(projeto, alocacao.projeto) && Objects.equals(perfil, alocacao.perfil);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, horasSemana, pessoa, projeto);
+        return Objects.hash(id, horasSemana, pessoa, projeto, perfil);
     }
 }
