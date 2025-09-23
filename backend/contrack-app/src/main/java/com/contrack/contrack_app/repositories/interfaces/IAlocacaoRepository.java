@@ -1,4 +1,4 @@
-package com.contrack.contrack_app.repository.interfaces;
+package com.contrack.contrack_app.repositories.interfaces;
 
 import com.contrack.contrack_app.models.Alocacao;
 import com.contrack.contrack_app.models.Pessoa;
@@ -8,7 +8,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.List;
 
 
-public interface IAlocacaoRepository extends JpaRepository<Alocacao, Integer> {
+public interface IAlocacaoRepository extends JpaRepository<Alocacao, Long> {
     /* Busca todas as alocações de uma pessoa em um projeto específico.
      * Usado para a regra de "um perfil por projeto".
      */
