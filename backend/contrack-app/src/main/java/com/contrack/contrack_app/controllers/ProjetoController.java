@@ -33,7 +33,6 @@ public class ProjetoController {
         return ResponseEntity.ok(projetos);
     }
     
-    // Novo endpoint para buscar por ID
     @GetMapping("/{id}")
     public ResponseEntity<ProjetoViewDTO> buscarProjetoPorId(@PathVariable Long id) {
         return projetoService.buscarProjetoPorId(id)

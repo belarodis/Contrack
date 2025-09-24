@@ -21,14 +21,13 @@ public class ProjetoService {
     private final IProjetoRepository projetoRepository;
     private final IAlocacaoRepository alocacaoRepository;
     private final ContratoService contratoService;
-    private final AlocacaoService alocacaoService;
     private final ProjetoMapper projetoMapper;
 
-    public ProjetoService(IProjetoRepository projetoRepository, IAlocacaoRepository alocacaoRepository, ContratoService contratoService, AlocacaoService alocacaoService, ProjetoMapper projetoMapper) {
+    // Construtor sem a dependência cíclica
+    public ProjetoService(IProjetoRepository projetoRepository, IAlocacaoRepository alocacaoRepository, ContratoService contratoService, ProjetoMapper projetoMapper) {
         this.projetoRepository = projetoRepository;
         this.alocacaoRepository = alocacaoRepository;
         this.contratoService = contratoService;
-        this.alocacaoService = alocacaoService;
         this.projetoMapper = projetoMapper;
     }
 
@@ -64,11 +63,5 @@ public class ProjetoService {
     public boolean isProjetoAtivo(Projeto projeto) {
         LocalDate hoje = LocalDate.now();
         return !hoje.isAfter(projeto.getDataFim());
-    }
-
-    public boolean isProjetoOperacional(Projeto projeto) {
-        boolean estaNoPrazo = isProjetoAtivo(projeto);
-        boolean temEquipeMinima = alocacaoService.verificarComposicaoTime(projeto);
-        return estaNoPrazo && temEquipeMinima;
     }
 }

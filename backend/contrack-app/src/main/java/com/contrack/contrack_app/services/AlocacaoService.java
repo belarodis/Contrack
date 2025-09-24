@@ -9,7 +9,6 @@ import com.contrack.contrack_app.models.Pessoa;
 import com.contrack.contrack_app.models.Projeto;
 import com.contrack.contrack_app.repositories.interfaces.IAlocacaoRepository;
 import org.springframework.stereotype.Service;
-
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -31,15 +30,15 @@ public class AlocacaoService {
         this.alocacaoMapper = alocacaoMapper;
     }
 
-    public Optional<Alocacao> buscarAlocacaoPorId(Long id) {
-        return alocacaoRepository.findById(id);
-    }
-
     public List<AlocacaoViewDTO> buscarAlocacoes() {
         return alocacaoRepository.findAll()
                 .stream()
                 .map(alocacaoMapper::toDto)
                 .collect(Collectors.toList());
+    }
+
+    public Optional<Alocacao> buscarAlocacaoPorId(Long id) {
+        return alocacaoRepository.findById(id);
     }
 
     public AlocacaoViewDTO criarAlocacao(AlocacaoCreateDTO dto) {
@@ -50,14 +49,12 @@ public class AlocacaoService {
         Perfil perfil = perfilService.buscarPerfilPorId(dto.perfilId())
                 .orElseThrow(() -> new IllegalArgumentException("Perfil não encontrado."));
 
-        // Cria a entidade para a validação
         Alocacao novaAlocacao = new Alocacao();
         novaAlocacao.setPessoa(pessoa);
         novaAlocacao.setProjeto(projeto);
         novaAlocacao.setPerfil(perfil);
         novaAlocacao.setHorasSemana(dto.horasSemana());
 
-        // Validações
         List<Alocacao> alocacoesNoProjeto = alocacaoRepository.findByPessoaAndProjeto(novaAlocacao.getPessoa(), novaAlocacao.getProjeto());
         if (!alocacoesNoProjeto.isEmpty()) {
             throw new IllegalArgumentException("Essa pessoa já está alocada neste projeto.");
@@ -75,23 +72,13 @@ public class AlocacaoService {
         Alocacao alocacaoSalva = alocacaoRepository.save(novaAlocacao);
         return alocacaoMapper.toDto(alocacaoSalva);
     }
-
+    
     public boolean verificarComposicaoTime(Projeto projeto) {
         List<Alocacao> alocacoesDoProjeto = alocacaoRepository.findByProjeto(projeto);
-
-        boolean temGerente = alocacoesDoProjeto.stream()
-                .anyMatch(alocacao -> alocacao.getPerfil().getTipo() == Perfil.TipoPerfil.GERENTE);
-
-        boolean temDev = alocacoesDoProjeto.stream()
-                .anyMatch(alocacao -> alocacao.getPerfil().getTipo() == Perfil.TipoPerfil.DEV);
-
-        boolean temQa = alocacoesDoProjeto.stream()
-                .anyMatch(alocacao -> alocacao.getPerfil().getTipo() == Perfil.TipoPerfil.QA);
-
-        long numGerentes = alocacoesDoProjeto.stream()
-                .filter(alocacao -> alocacao.getPerfil().getTipo() == Perfil.TipoPerfil.GERENTE)
-                .count();
-
+        boolean temGerente = alocacoesDoProjeto.stream().anyMatch(alocacao -> alocacao.getPerfil().getTipo() == Perfil.TipoPerfil.GERENTE);
+        boolean temDev = alocacoesDoProjeto.stream().anyMatch(alocacao -> alocacao.getPerfil().getTipo() == Perfil.TipoPerfil.DEV);
+        boolean temQa = alocacoesDoProjeto.stream().anyMatch(alocacao -> alocacao.getPerfil().getTipo() == Perfil.TipoPerfil.QA);
+        long numGerentes = alocacoesDoProjeto.stream().filter(alocacao -> alocacao.getPerfil().getTipo() == Perfil.TipoPerfil.GERENTE).count();
         return (temGerente && temDev && temQa && numGerentes == 1);
     }
 }

@@ -1,13 +1,11 @@
 package com.contrack.contrack_app.controllers;
 
-
 import com.contrack.contrack_app.dto.create.AlocacaoCreateDTO;
 import com.contrack.contrack_app.dto.view.AlocacaoViewDTO;
 import com.contrack.contrack_app.mapper.AlocacaoMapper;
 import com.contrack.contrack_app.services.AlocacaoService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.List;
 
 @RestController

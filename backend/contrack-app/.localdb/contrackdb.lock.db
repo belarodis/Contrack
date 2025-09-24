@@ -1,0 +1,6 @@
+#FileLock
+#Tue Sep 23 21:48:47 BRT 2025
+hostName=securelogin.networks.dell.com
+id=1997931be48c6b62969cb334aa5e0fabedf9775dafd
+method=file
+server=192.168.0.10\:65415
