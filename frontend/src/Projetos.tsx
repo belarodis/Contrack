@@ -1,19 +1,19 @@
 import ButtonPlus from "./ButtonPlus";
 import Projeto from "./Projeto";
 
-const projetos = [
-  { id: 1, nome: "A" },
-  { id: 2, nome: "B" },
-  { id: 3, nome: "C" },
-  { id: 4, nome: "D" },
-  { id: 5, nome: "E" },
-];
+interface ProjetosProps {
+  onSelectProjeto: (id: number) => void;
+}
 
-// interface ProjetosProps {
-//   onSelect: (id: number) => void;
-// }
+function Projetos({ onSelectProjeto }: ProjetosProps) {
+  const projetos = [
+    { id: 1, nome: "A" },
+    { id: 2, nome: "B" },
+    { id: 3, nome: "C" },
+    { id: 4, nome: "D" },
+    { id: 5, nome: "E" },
+  ];
 
-function Projetos() {
   return (
     <div className="bg-[#0A2439] flex flex-col flex-1 h-full rounded-[25px] px-[48px] pt-[30px]">
       <div className="flex flex-row justify-between items-center">
@@ -27,12 +27,12 @@ function Projetos() {
       </div>
       <div className="grid grid-cols-2 gap-[1vw] pt-[15px]">
         {projetos.map((p) => (
-          <div
+          <Projeto
             key={p.id}
-            className="w-full h-full flex"
-          >
-            <Projeto />
-          </div>
+            id={p.id}
+            nome={p.nome}
+            onSelect={onSelectProjeto}
+          />
         ))}
       </div>
     </div>
