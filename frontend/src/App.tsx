@@ -1,35 +1,27 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import Alocacao from "./Alocacao";
+import Alocacoes from "./Alocacoes";
+import Contratos from "./Contratos";
+import Pessoas from "./Pessoas";
+import Projetos from "./Projetos";
 
 function App() {
-  const [count, setCount] = useState(0)
-
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
+    <div className="flex h-full w-full gap-[38px]">
+      <div className="w-1/2 min-w-0">
+        <Projetos />
       </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
+      {/* Esse aparece quando nao tem projeto selecionado */}
+      <div className="w-1/2 min-w-0 flex flex-col gap-[38px]">
+        <Pessoas />
+        <Contratos />
       </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+      {/* Esse aparece só quando eu clickar em um projeto */}
+      {/* <div className="w-1/2 min-w-0 flex flex-col gap-[38px]">
+        <Alocacoes />
+        <Custos />
+      </div> */}
+    </div>
+  );
 }
 
-export default App
+export default App;
