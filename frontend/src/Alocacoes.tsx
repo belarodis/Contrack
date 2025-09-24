@@ -1,5 +1,7 @@
 import ButtonPlus from "./ButtonPlus";
 import Alocacao from "./Alocacao";
+import ButtonExit from "./ButtonExit.tsx";
+import ButtonSave from "./ButtonSave.tsx";
 
 function Alocacoes() {
   const alocacoes = [
