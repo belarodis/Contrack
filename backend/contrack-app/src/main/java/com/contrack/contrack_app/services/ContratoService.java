@@ -30,8 +30,16 @@ public class ContratoService {
         return contratoRepository.findById(idContrato);
     }
 
+    // Novo método para buscar um contrato por ID e retorná-lo como DTO com status
+    public Optional<ContratoViewDTO> buscarContratoPorIdComStatus(Long idContrato) {
+        return contratoRepository.findById(idContrato)
+                .map(contratoMapper::toDto);
+    }
+    
+    // ... os outros métodos do ContratoService (buscarContratos, criarContrato, etc.)
+    // ... permanecem inalterados como na versão anterior.
     public List<ContratoViewDTO> buscarContratos() {
-        return contratoRepository.findAll()
+         return contratoRepository.findAll()
                 .stream()
                 .map(contratoMapper::toDto)
                 .collect(Collectors.toList());
@@ -64,7 +72,7 @@ public class ContratoService {
         List<Contrato> contratos = contratoRepository.findByPessoaOrderByDataFimDesc(pessoa);
         return contratos.stream()
                 .filter(contrato -> !LocalDate.now().isBefore(contrato.getDataInicio()) &&
-                                !LocalDate.now().isAfter(contrato.getDataFim()))
+                                    !LocalDate.now().isAfter(contrato.getDataFim()))
                 .findFirst();
     }
 }
