@@ -11,6 +11,7 @@ import java.time.LocalDate;
 public interface ContratoMapper {
 
     @Mapping(target = "pessoaId", source = "pessoa.id")
+    @Mapping(target = "nomePessoa", source = "pessoa.nome") 
     @Mapping(target = "status", expression = "java(calcularStatus(entity))")
     ContratoViewDTO toDto(Contrato entity);
 

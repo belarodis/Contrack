@@ -1,5 +1,3 @@
-// src/main/java/com/contrack/contrack_app/services/AlocacaoService.java
-
 package com.contrack.contrack_app.services;
 
 import com.contrack.contrack_app.dto.create.AlocacaoCreateDTO;
@@ -78,10 +76,8 @@ public class AlocacaoService {
         int horasAtuaisAlocadasEmProjetosAtivos = alocacaoRepository.findByPessoa(novaAlocacao.getPessoa())
                 .stream()
                 .filter(aloc -> {
-                    // Mapeia a alocação para um DTO para obter o status do projeto
                     ProjetoViewDTO projetoDto = projetoService.buscarProjetoPorIdComStatus(aloc.getProjeto().getId())
                             .orElse(null);
-                    // Retorna 'true' se o projeto estiver 'Ativo' ou 'Incompleto'
                     return projetoDto != null && (projetoDto.status().equals("Ativo") || projetoDto.status().equals("Incompleto"));
                 })
                 .mapToInt(Alocacao::getHorasSemana)
