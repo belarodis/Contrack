@@ -1,6 +1,8 @@
 import Pessoa from "./Pessoa";
 import ButtonPlus from "./ButtonPlus";
 import { usePessoas } from './hooks/usePessoa.ts';
+import ButtonSave from "./ButtonSave.tsx";
+import ButtonExit from "./ButtonExit.tsx";
 
 
 export default function Pessoas() {
@@ -11,6 +13,8 @@ export default function Pessoas() {
             <div className="flex flex-row justify-between items-center">
                 <h1 className="text-[#9DFFD9] text-[36px] font-semibold">Pessoas</h1>
                 <ButtonPlus/>
+                <ButtonSave/>
+                <ButtonExit/>
             </div>
 
             {loading && <div className="pt-[15px] text-[#9DFFD9]/70">Carregando…</div>}
