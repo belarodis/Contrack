@@ -1,8 +1,9 @@
 import Pessoa from "./Pessoa";
 import ButtonPlus from "./ButtonPlus";
-import { usePessoas } from './hooks/usePessoa.ts';
+import { usePessoas } from './hooks/usePessoa';
 import ButtonSave from "./ButtonSave.tsx";
 import ButtonExit from "./ButtonExit.tsx";
+import type {PessoaDTO} from "./api/pessoasApi.ts";
 
 
 export default function Pessoas() {
@@ -22,7 +23,7 @@ export default function Pessoas() {
 
             {!loading && !error && (
                 <div className="grid grid-cols-3 gap-[1vw] pt-[15px]">
-                    {(pessoas ?? []).map((p) => (
+                    {(pessoas ?? []).map((p : PessoaDTO ) => (
                         <div key={p.id} className="w-full h-full flex">
                             <Pessoa nome={p.nome} />
                         </div>
