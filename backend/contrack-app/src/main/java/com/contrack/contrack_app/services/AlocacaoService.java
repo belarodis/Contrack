@@ -75,10 +75,10 @@ public class AlocacaoService {
     
     public boolean verificarComposicaoTime(Projeto projeto) {
         List<Alocacao> alocacoesDoProjeto = alocacaoRepository.findByProjeto(projeto);
-        boolean temGerente = alocacoesDoProjeto.stream().anyMatch(alocacao -> alocacao.getPerfil().getTipo() == Perfil.TipoPerfil.GERENTE);
-        boolean temDev = alocacoesDoProjeto.stream().anyMatch(alocacao -> alocacao.getPerfil().getTipo() == Perfil.TipoPerfil.DEV);
-        boolean temQa = alocacoesDoProjeto.stream().anyMatch(alocacao -> alocacao.getPerfil().getTipo() == Perfil.TipoPerfil.QA);
-        long numGerentes = alocacoesDoProjeto.stream().filter(alocacao -> alocacao.getPerfil().getTipo() == Perfil.TipoPerfil.GERENTE).count();
+        boolean temGerente = alocacoesDoProjeto.stream().anyMatch(alocacao -> alocacao.getPerfil().getTipo() == Perfil.TipoPerfil.gerente);
+        boolean temDev = alocacoesDoProjeto.stream().anyMatch(alocacao -> alocacao.getPerfil().getTipo() == Perfil.TipoPerfil.dev);
+        boolean temQa = alocacoesDoProjeto.stream().anyMatch(alocacao -> alocacao.getPerfil().getTipo() == Perfil.TipoPerfil.qa);
+        long numGerentes = alocacoesDoProjeto.stream().filter(alocacao -> alocacao.getPerfil().getTipo() == Perfil.TipoPerfil.gerente).count();
         return (temGerente && temDev && temQa && numGerentes == 1);
     }
 }

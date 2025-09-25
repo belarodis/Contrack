@@ -16,10 +16,10 @@ public class Perfil {
     private TipoPerfil tipo;
 
     public enum TipoPerfil {
-        GERENTE,
-        DEV,
-        QA,
-        SECURITY
+        gerente,
+        dev,
+        qa,
+        security
     }
 
     public Perfil() {}
