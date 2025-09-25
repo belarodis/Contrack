@@ -11,9 +11,9 @@ export default function ButtonExit({ onClick, className = "" }: ButtonExitProps)
         <div
             onClick={onClick}
             className={
-                "flex h-fit bg-[#6e1919] p-[8px] rounded-[10px] mr-[15px] " +
+                "flex h-fit bg-[#571925] p-[8px] rounded-[15px] mr-[15px] " +
                 "hover:shadow-[0_0_20px_rgba(225,0,0,0.5)] hover:cursor-pointer " +
-                "outline-transparent hover:outline-[#FD0408] outline-[1px] " +
+                "outline-transparent hover:outline-[#d60b30] outline-[1px] " +
                 "transition-all duration-[0.3s] " +
                 className
             }
