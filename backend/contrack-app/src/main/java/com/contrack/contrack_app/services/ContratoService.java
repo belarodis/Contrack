@@ -30,14 +30,12 @@ public class ContratoService {
         return contratoRepository.findById(idContrato);
     }
 
-    // Novo método para buscar um contrato por ID e retorná-lo como DTO com status
+
     public Optional<ContratoViewDTO> buscarContratoPorIdComStatus(Long idContrato) {
         return contratoRepository.findById(idContrato)
                 .map(contratoMapper::toDto);
     }
-    
-    // ... os outros métodos do ContratoService (buscarContratos, criarContrato, etc.)
-    // ... permanecem inalterados como na versão anterior.
+
     public List<ContratoViewDTO> buscarContratos() {
          return contratoRepository.findAll()
                 .stream()
@@ -74,5 +72,14 @@ public class ContratoService {
                 .filter(contrato -> !LocalDate.now().isBefore(contrato.getDataInicio()) &&
                                     !LocalDate.now().isAfter(contrato.getDataFim()))
                 .findFirst();
+    }
+
+    public String calcularStatus(Contrato contrato) {
+        LocalDate hoje = LocalDate.now();
+        if (hoje.isAfter(contrato.getDataInicio()) && (contrato.getDataFim() == null || hoje.isBefore(contrato.getDataFim()) || hoje.isEqual(contrato.getDataFim()))) {
+            return "Ativo";
+        } else {
+            return "Inativo";
+        }
     }
 }
