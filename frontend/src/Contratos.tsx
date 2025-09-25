@@ -26,7 +26,6 @@ function Contratos() {
               dataFim={c.dataFim}
               horasSemana={c.horasSemana}
               salarioHora={c.salarioHora}
-              status={c.status}
             />
           </div>
         ))}

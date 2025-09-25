@@ -4,10 +4,9 @@ type ContratoProps = {
   dataFim: string;
   horasSemana: number;
   salarioHora: number;
-  status: string;
 };
 
-function Contrato({nome, dataInicio, dataFim, horasSemana, salarioHora, status}: ContratoProps) {
+function Contrato({nome, dataInicio, dataFim, horasSemana, salarioHora}: ContratoProps) {
   return (
     <div className="flex flex-col bg-[#0D3445] h-[18vh] w-full rounded-[2vh] text-white py-[12px] px-[16px] gap-[5px] font-semibold">
       <h3 className="text-[18px] font-bold">{nome}</h3>
