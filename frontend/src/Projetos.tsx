@@ -1,11 +1,15 @@
 import ButtonPlus from "./components/buttons/ButtonPlus.tsx";
 import Projeto from "./Projeto";
+import {useState} from "react";
+import Overlay from "./components/modals/Overlay.tsx";
+import CriarProjeto from "./components/modals/CriarProjeto.tsx";
 
 interface ProjetosProps {
   onSelectProjeto: (id: number) => void;
 }
 
 function Projetos({ onSelectProjeto }: ProjetosProps) {
+    const [openModal, setOpenModal] = useState(false);
   const projetos = [
     { id: 1, nome: "A" },
     { id: 2, nome: "B" },
@@ -23,7 +27,7 @@ function Projetos({ onSelectProjeto }: ProjetosProps) {
             Selecione um projeto para mais informações
           </p>
         </div>
-        <ButtonPlus />
+          <ButtonPlus onClick={() => setOpenModal(true)}/>
       </div>
       <div className="grid grid-cols-2 gap-[1vw] pt-[15px]">
         {projetos.map((p) => (
@@ -35,7 +39,13 @@ function Projetos({ onSelectProjeto }: ProjetosProps) {
           />
         ))}
       </div>
+        {openModal && (
+            <Overlay onClose={() => setOpenModal(false)}>
+                <CriarProjeto onClose={() => setOpenModal(false)} />
+            </Overlay>
+        )}
     </div>
+
   );
 }
 
