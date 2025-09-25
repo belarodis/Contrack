@@ -8,6 +8,7 @@ import com.contrack.contrack_app.repositories.interfaces.IPessoaRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Comparator;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -36,6 +37,9 @@ public class PessoaService {
         return pessoaRepository.findAll()
                 .stream()
                 .map(pessoaMapper::toDto)
+                .sorted(Comparator
+                    .comparing(PessoaViewDTO::disponivel).reversed() // ativos primeiro
+                    .thenComparing(PessoaViewDTO::nome)) //dps ordena tudo
                 .collect(Collectors.toList());
     }
 }
