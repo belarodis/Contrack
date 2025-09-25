@@ -1,7 +1,9 @@
 package com.contrack.contrack_app.controllers;
 
+
 import com.contrack.contrack_app.dto.create.ContratoCreateDTO;
 import com.contrack.contrack_app.dto.view.ContratoViewDTO;
+import com.contrack.contrack_app.mapper.ContratoMapper;
 import com.contrack.contrack_app.services.ContratoService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -13,9 +15,11 @@ import java.util.List;
 public class ContratoController {
 
     private final ContratoService contratoService;
+    private final ContratoMapper contratoMapper;
 
-    public ContratoController(ContratoService contratoService) {
+    public ContratoController(ContratoService contratoService, ContratoMapper contratoMapper) {
         this.contratoService = contratoService;
+        this.contratoMapper = contratoMapper;
     }
 
     @PostMapping
@@ -36,7 +40,8 @@ public class ContratoController {
     
     @GetMapping("/{id}")
     public ResponseEntity<ContratoViewDTO> buscarContratoPorId(@PathVariable Long id) {
-        return contratoService.buscarContratoPorIdComStatus(id)
+        return contratoService.buscarContratoPorId(id)
+                .map(contratoMapper::toDto)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
