@@ -1,4 +1,4 @@
-import ButtonPlus from "./ButtonPlus";
+import ButtonPlus from "./components/buttons/ButtonPlus.tsx";
 function Custos() {
   return (
     <div className="bg-[#0A2439] flex flex-col rounded-[25px] px-[48px] pt-[30px] basis-2/3 min-h-0">
