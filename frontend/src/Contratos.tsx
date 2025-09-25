@@ -1,4 +1,4 @@
-import ButtonPlus from "./ButtonPlus";
+import ButtonPlus from "./components/buttons/ButtonPlus.tsx";
 import Contrato from "./Contrato";
 import { useContratos } from "./hooks/useContratos";
 import { usePessoas } from "./hooks/usePessoas";

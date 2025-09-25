@@ -1,5 +1,5 @@
-import ButtonPlus from "./ButtonPlus";
 import { useProjetos } from "./hooks/useProjetos";
+import ButtonPlus from "./components/buttons/ButtonPlus.tsx";
 import Projeto from "./Projeto";
 
 interface ProjetosProps {
