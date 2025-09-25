@@ -1,3 +1,5 @@
+// src/main/java/com/contrack/contrack_app/controllers/AlocacaoController.java
+
 package com.contrack.contrack_app.controllers;
 
 import com.contrack.contrack_app.dto.create.AlocacaoCreateDTO;
@@ -20,6 +22,7 @@ public class AlocacaoController {
         this.alocacaoMapper = alocacaoMapper;
     }
 
+    // Endpoint para criar uma nova alocação
     @PostMapping
     public ResponseEntity<AlocacaoViewDTO> criarAlocacao(@RequestBody AlocacaoCreateDTO dto) {
         try {
@@ -30,17 +33,29 @@ public class AlocacaoController {
         }
     }
 
+    // Endpoint para buscar todas as alocações
     @GetMapping
     public ResponseEntity<List<AlocacaoViewDTO>> buscarAlocacoes() {
         List<AlocacaoViewDTO> alocacoes = alocacaoService.buscarAlocacoes();
         return ResponseEntity.ok(alocacoes);
     }
     
+    // Endpoint para buscar alocação por ID
     @GetMapping("/{id}")
     public ResponseEntity<AlocacaoViewDTO> buscarAlocacaoPorId(@PathVariable Long id) {
         return alocacaoService.buscarAlocacaoPorId(id)
                 .map(alocacaoMapper::toDto)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
+    }
+    
+    @GetMapping("/projeto/{projetoId}")
+    public ResponseEntity<List<AlocacaoViewDTO>> buscarAlocacoesPorProjeto(@PathVariable Long projetoId) {
+        try {
+            List<AlocacaoViewDTO> alocacoes = alocacaoService.buscarAlocacoesPorProjetoId(projetoId);
+            return ResponseEntity.ok(alocacoes);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.notFound().build();
+        }
     }
 }

@@ -40,7 +40,17 @@ public class AlocacaoService {
     public Optional<Alocacao> buscarAlocacaoPorId(Long id) {
         return alocacaoRepository.findById(id);
     }
+    
+    public List<AlocacaoViewDTO> buscarAlocacoesPorProjetoId(Long projetoId) {
+        Projeto projeto = projetoService.buscarProjetoPorId(projetoId)
+                .orElseThrow(() -> new IllegalArgumentException("Projeto não encontrado."));
 
+        return alocacaoRepository.findByProjeto(projeto)
+                .stream()
+                .map(alocacaoMapper::toDto)
+                .collect(Collectors.toList());
+    }
+    
     public AlocacaoViewDTO criarAlocacao(AlocacaoCreateDTO dto) {
         Pessoa pessoa = pessoaService.buscarPessoaPorId(dto.pessoaId())
                 .orElseThrow(() -> new IllegalArgumentException("Pessoa não encontrada."));
