@@ -1,3 +1,5 @@
+import React from "react";
+
 type ButtonPlusProps = React.HTMLAttributes<HTMLDivElement>;
 
 export default function ButtonPlus({ className = "", ...rest }: ButtonPlusProps) {
