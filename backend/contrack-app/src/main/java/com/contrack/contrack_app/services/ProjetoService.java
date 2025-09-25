@@ -64,4 +64,9 @@ public class ProjetoService {
         LocalDate hoje = LocalDate.now();
         return !hoje.isAfter(projeto.getDataFim());
     }
+
+    public Optional<ProjetoViewDTO> buscarProjetoPorIdComStatus(Long id) {
+    return projetoRepository.findById(id)
+        .map(projetoMapper::toDto);
+}
 }

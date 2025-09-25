@@ -1,13 +1,17 @@
 import { useProjetos } from "./hooks/useProjetos";
 import ButtonPlus from "./components/buttons/ButtonPlus.tsx";
 import Projeto from "./Projeto";
+import {useState} from "react";
+import Overlay from "./components/modals/Overlay.tsx";
+import CriarProjeto from "./components/modals/CriarProjeto.tsx";
 
 interface ProjetosProps {
   onSelectProjeto: (id: number) => void;
 }
 
 function Projetos({ onSelectProjeto }: ProjetosProps) {
-  const projetos = useProjetos();
+    const [openModal, setOpenModal] = useState(false);
+    const projetos = useProjetos();
 
   return (
     <div className="bg-[#0A2439] flex flex-col flex-1 h-full rounded-[25px] px-[48px] pt-[30px]">
@@ -18,7 +22,7 @@ function Projetos({ onSelectProjeto }: ProjetosProps) {
             Selecione um projeto para mais informações
           </p>
         </div>
-        <ButtonPlus />
+          <ButtonPlus onClick={() => setOpenModal(true)}/>
       </div>
       <div className="grid grid-cols-2 gap-[1vw] pt-[15px]">
         {projetos.map((p) => (
@@ -30,7 +34,13 @@ function Projetos({ onSelectProjeto }: ProjetosProps) {
           />
         ))}
       </div>
+        {openModal && (
+            <Overlay onClose={() => setOpenModal(false)}>
+                <CriarProjeto onClose={() => setOpenModal(false)} />
+            </Overlay>
+        )}
     </div>
+
   );
 }
 
