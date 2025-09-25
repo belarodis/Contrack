@@ -6,31 +6,22 @@
     box-shadow: var(--shadow-card, 0 8px 30px rgba(0,0,0,.35));
     padding: 18px 20px 22px;
     display: flex;
+    width: 600px;
+    height: fit-content;
     flex-direction: column;
-    gap: 14px;
+    gap: 15px;
 }
+
 
 .form-card__header {
     display: grid;
     grid-template-columns: 1fr auto;
     grid-template-areas:
-    "badge actions"
     "title actions";
-    row-gap: 10px;
-    gap: 10px;
     align-items: center;
 }
 
-.form-card__buttons {
-    gap: 16px;
-}
 
-
-.form-card__badge {
-    grid-area: badge;
-    font-size: 13px;
-    color: #cfb7ff;
-}
 
 .form-card__title {
     grid-area: title;
@@ -42,10 +33,10 @@
 .form-card__actions {
     grid-area: actions;
     display: flex;
-    gap: 10px;
+
 }
 
 .form-card__body {
     display: grid;
-    gap: 12px;
 }
+
