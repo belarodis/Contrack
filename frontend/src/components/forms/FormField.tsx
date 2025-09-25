@@ -1,5 +1,6 @@
 // components/form/FormField.tsx
 import React from "react";
+import "./FormField.css"
 
 type FormFieldProps = {
     label: string;
@@ -10,7 +11,7 @@ type FormFieldProps = {
 
 export function FormField({ label, htmlFor, hint, children }: FormFieldProps) {
     return (
-        <div className="grid gap-1.5">
+        <div className="form-field">
             <label htmlFor={htmlFor} className="text-[var(--card-muted)] font-semibold">
                 {label}
             </label>
