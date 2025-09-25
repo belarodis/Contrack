@@ -11,7 +11,10 @@ INSERT INTO pessoa (nome) VALUES
   ('Henrique Schultz'),   -- id 2
   ('Isabela Souza'),      -- id 3
   ('João Vithor'),        -- id 4
-  ('Gabriel Velloso');    -- id 5
+  ('Maria'),    -- id 5
+  ('Dandara'),   -- id 6
+  ('Manuella'),   -- id 7
+  ('Ricardo');    -- id 8
 
 -- PROJETOS
 INSERT INTO projeto (nome, data_inicio, data_fim, descricao) VALUES
@@ -19,15 +22,20 @@ INSERT INTO projeto (nome, data_inicio, data_fim, descricao) VALUES
   ('AGES 4',                        DATE '2025-09-23', DATE '2025-12-31', 'Projeto prático de Engenharia de Software'),  -- id 2
   ('Projeto de Criptomoedas',       DATE '2024-03-15', DATE '2027-06-22', 'Aplicando Bitcoin em Jogos de Luta'),         -- id 3
   ('Contrack',                      DATE '2025-09-22', DATE '2025-09-26', 'Projeto de Gerenciamento de Contratos'),      -- id 4
-  ('PUCRS/DELL IT Academy #22',     DATE '2025-06-12', DATE '2026-01-05', 'Treinamento da Cohort #22');                   -- id 5
+  ('PUCRS/DELL IT Academy #22',     DATE '2025-06-12', DATE '2026-01-05', 'Treinamento da Cohort #22'),                   -- id 5
+  ('Aguarindo',     DATE '2027-06-12', DATE '2028-01-05', 'Sistema de espera de desenvolvimento'),                   -- id 6
+  ('Passarinho',     DATE '2021-06-12', DATE '2023-01-05', 'Sistema legado');                   -- id 7
 
 -- CONTRATOS
 INSERT INTO contrato (data_inicio, data_fim, horas_semana, salario_hora, pessoa_id) VALUES
   (DATE '2024-01-01', DATE '2026-12-31', 30,  80.00, 1), -- Henrique M.
   (DATE '2024-02-01', DATE '2026-12-31', 30,  80.00, 2), -- Henrique S.
   (DATE '2024-01-01', DATE '2026-12-31', 30,  70.00, 3), -- Isabela
-  (DATE '2024-01-01', DATE '2026-12-31', 30,  90.00, 4), -- João
-  (DATE '2024-01-01', DATE '2026-12-31', 40, 120.00, 5); -- Gabriel
+  (DATE '2024-01-01', DATE '2026-12-31', 40, 120.00, 5), -- Gabriel
+  (DATE '2024-01-01', DATE '2026-12-31', 30,  30.00, 1), -- Maria
+  (DATE '2024-01-01', DATE '2026-12-31', 30,  40.00, 2), -- Dandara
+  (DATE '2024-01-01', DATE '2026-12-31', 30,  130.00, 3), -- Manuella
+  (DATE '2024-01-01', DATE '2026-12-31', 30,  80.00, 4); -- Ricardo
 
 -- ALOCAÇÕES
 -- Projeto 1
@@ -62,3 +70,9 @@ INSERT INTO alocacao (horas_semana, pessoa_id, projeto_id, perfil_id) VALUES
   (8,  5, 5, 1),
   (10, 1, 5, 2),
   (6,  3, 5, 3);
+
+--projeto 6
+INSERT INTO alocacao (horas_semana, pessoa_id, projeto_id, perfil_id) VALUES
+  (8,  6, 5, 1),
+  (10, 7, 5, 2),
+  (6,  8, 5, 3);
