@@ -1,4 +1,4 @@
-import ButtonPlus from "./ButtonPlus";
+import ButtonPlus from "./components/buttons/ButtonPlus.tsx";
 import Projeto from "./Projeto";
 
 interface ProjetosProps {

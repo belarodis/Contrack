@@ -1,6 +1,24 @@
 @import url("https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap");
 @import "tailwindcss";
 
+
+/* ========== TOKENS GLOBAIS ========== */
+:root {
+    --card-bg: #0e4a45;
+    --card-border: #36ffe0;
+    --card-text: #e9fffc;
+    --card-muted: #bfe5de;
+
+    --btn-back: #532f2f;
+    --btn-ok: #0f635d;
+
+    --ring: rgba(54, 255, 224, 0.35);
+
+    --radius-lg: 18px;
+    --shadow-card: 0 8px 30px rgba(0, 0, 0, 0.35);
+}
+
+
 body,
 html {
   margin: 0px;
