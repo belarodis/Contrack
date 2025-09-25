@@ -28,7 +28,6 @@ function Pessoas() {
           </div>
         ))}
       </div>
-        {/* Modal VIP */}
         {openModal && (
             <Overlay onClose={() => setOpenModal(false)}>
                 <CriarPessoa onClose={() => setOpenModal(false)} />
