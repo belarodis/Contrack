@@ -1,7 +1,10 @@
+// src/main/java/com/contrack/contrack_app/services/AlocacaoService.java
+
 package com.contrack.contrack_app.services;
 
 import com.contrack.contrack_app.dto.create.AlocacaoCreateDTO;
 import com.contrack.contrack_app.dto.view.AlocacaoViewDTO;
+import com.contrack.contrack_app.dto.view.ProjetoViewDTO;
 import com.contrack.contrack_app.mapper.AlocacaoMapper;
 import com.contrack.contrack_app.models.Alocacao;
 import com.contrack.contrack_app.models.Perfil;
@@ -40,7 +43,7 @@ public class AlocacaoService {
     public Optional<Alocacao> buscarAlocacaoPorId(Long id) {
         return alocacaoRepository.findById(id);
     }
-    
+
     public List<AlocacaoViewDTO> buscarAlocacoesPorProjetoId(Long projetoId) {
         Projeto projeto = projetoService.buscarProjetoPorId(projetoId)
                 .orElseThrow(() -> new IllegalArgumentException("Projeto não encontrado."));
@@ -50,7 +53,7 @@ public class AlocacaoService {
                 .map(alocacaoMapper::toDto)
                 .collect(Collectors.toList());
     }
-    
+
     public AlocacaoViewDTO criarAlocacao(AlocacaoCreateDTO dto) {
         Pessoa pessoa = pessoaService.buscarPessoaPorId(dto.pessoaId())
                 .orElseThrow(() -> new IllegalArgumentException("Pessoa não encontrada."));
@@ -65,18 +68,27 @@ public class AlocacaoService {
         novaAlocacao.setPerfil(perfil);
         novaAlocacao.setHorasSemana(dto.horasSemana());
 
+        // Regra 1: Valida se a pessoa já está alocada no projeto
         List<Alocacao> alocacoesNoProjeto = alocacaoRepository.findByPessoaAndProjeto(novaAlocacao.getPessoa(), novaAlocacao.getProjeto());
         if (!alocacoesNoProjeto.isEmpty()) {
             throw new IllegalArgumentException("Essa pessoa já está alocada neste projeto.");
         }
 
-        int horasAtuaisAlocadas = alocacaoRepository.findByPessoa(novaAlocacao.getPessoa())
+        // Regra 2: Valida o total de horas semanais em projetos ativos
+        int horasAtuaisAlocadasEmProjetosAtivos = alocacaoRepository.findByPessoa(novaAlocacao.getPessoa())
                 .stream()
+                .filter(aloc -> {
+                    // Mapeia a alocação para um DTO para obter o status do projeto
+                    ProjetoViewDTO projetoDto = projetoService.buscarProjetoPorIdComStatus(aloc.getProjeto().getId())
+                            .orElse(null);
+                    // Retorna 'true' se o projeto estiver 'Ativo' ou 'Incompleto'
+                    return projetoDto != null && (projetoDto.status().equals("Ativo") || projetoDto.status().equals("Incompleto"));
+                })
                 .mapToInt(Alocacao::getHorasSemana)
                 .sum();
 
-        if ((horasAtuaisAlocadas + novaAlocacao.getHorasSemana()) > 40) {
-            throw new IllegalArgumentException("O total de horas semanais para esta pessoa excederá 40.");
+        if ((horasAtuaisAlocadasEmProjetosAtivos + novaAlocacao.getHorasSemana()) > 40) {
+            throw new IllegalArgumentException("O total de horas semanais para esta pessoa excederá 40, considerando apenas projetos ativos/incompletos.");
         }
 
         Alocacao alocacaoSalva = alocacaoRepository.save(novaAlocacao);
