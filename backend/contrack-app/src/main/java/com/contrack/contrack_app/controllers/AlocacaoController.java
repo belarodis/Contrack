@@ -50,7 +50,7 @@ public class AlocacaoController {
                 .orElse(ResponseEntity.notFound().build());
     }
     
-    @GetMapping("/alocacoes/{projetoId}")
+    @GetMapping("/projetos/{projetoId}")
     public ResponseEntity<List<AlocacaoViewDTO>> buscarAlocacoesPorProjeto(@PathVariable Long projetoId) {
         try {
             List<AlocacaoViewDTO> alocacoes = alocacaoService.buscarAlocacoesPorProjetoId(projetoId);
