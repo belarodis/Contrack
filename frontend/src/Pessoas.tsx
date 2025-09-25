@@ -1,9 +1,9 @@
 import Pessoa from "./Pessoa";
 import ButtonPlus from "./ButtonPlus";
-import { usePessoas } from './apihooks/usePessoas';
+import { usePessoas } from '../src/apihooks/usePessoas';
 import ButtonSave from "./ButtonSave.tsx";
 import ButtonExit from "./ButtonExit.tsx";
-import type {PessoaDTO} from "./api/pessoasApi";
+import type {PessoaDTO} from "../src/api/pessoasApi";
 
 
 export default function Pessoas() {
