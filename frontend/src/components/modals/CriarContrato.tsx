@@ -15,10 +15,10 @@ export default function CriarContrato({ onClose }: { onClose?: () => void }) {
     const [salarioHora, setSalarioHora] = useState("");
 
     const pessoasOptions: Option[] = [
-        { value: "gerente",  label: "Gerente" },
-        { value: "dev",      label: "Dev" },
-        { value: "qa",       label: "QA" },
-        { value: "security", label: "Security" },
+        { value: "Pessoa 1",  label: "Pessoa 1" },
+        { value: "Pessoa 2",      label: "Pessoa 2" },
+        { value: "Pessoa 3",       label: "Pessoa 3" },
+        { value: "Pessoa 4", label: "Pessoa 4" },
     ];
 
     const canSave =
