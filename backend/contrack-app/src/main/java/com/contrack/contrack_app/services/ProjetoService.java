@@ -2,6 +2,7 @@ package com.contrack.contrack_app.services;
 
 import com.contrack.contrack_app.dto.create.ProjetoCreateDTO;
 import com.contrack.contrack_app.dto.view.ProjetoViewDTO;
+import com.contrack.contrack_app.exceptions.ResourceNotFoundException;
 import com.contrack.contrack_app.mapper.ProjetoMapper;
 import com.contrack.contrack_app.models.Alocacao;
 import com.contrack.contrack_app.models.Contrato;
@@ -66,7 +67,13 @@ public class ProjetoService {
     }
 
     public Optional<ProjetoViewDTO> buscarProjetoPorIdComStatus(Long id) {
-    return projetoRepository.findById(id)
-        .map(projetoMapper::toDto);
-}
+        return projetoRepository.findById(id)
+                .map(projetoMapper::toDto);
+    }
+    
+    // Método auxiliar para buscar por ID, lançando exceção se não encontrar (usado pelo Controller)
+    public Projeto buscarProjetoPorIdOrThrow(Long id) {
+        return projetoRepository.findById(id)
+            .orElseThrow(() -> new ResourceNotFoundException("Projeto", id));
+    }
 }

@@ -3,6 +3,9 @@ package com.contrack.contrack_app.services;
 import com.contrack.contrack_app.dto.create.AlocacaoCreateDTO;
 import com.contrack.contrack_app.dto.view.AlocacaoViewDTO;
 import com.contrack.contrack_app.dto.view.ProjetoViewDTO;
+import com.contrack.contrack_app.exceptions.InvalidDataException;
+import com.contrack.contrack_app.exceptions.ResourceConflictException;
+import com.contrack.contrack_app.exceptions.ResourceNotFoundException;
 import com.contrack.contrack_app.mapper.AlocacaoMapper;
 import com.contrack.contrack_app.models.Alocacao;
 import com.contrack.contrack_app.models.Perfil;
@@ -44,7 +47,8 @@ public class AlocacaoService {
 
     public List<AlocacaoViewDTO> buscarAlocacoesPorProjetoId(Long projetoId) {
         Projeto projeto = projetoService.buscarProjetoPorId(projetoId)
-                .orElseThrow(() -> new IllegalArgumentException("Projeto não encontrado."));
+                // Lança 404
+                .orElseThrow(() -> new ResourceNotFoundException("Projeto", projetoId));
 
         return alocacaoRepository.findByProjeto(projeto)
                 .stream()
@@ -54,11 +58,14 @@ public class AlocacaoService {
 
     public AlocacaoViewDTO criarAlocacao(AlocacaoCreateDTO dto) {
         Pessoa pessoa = pessoaService.buscarPessoaPorId(dto.pessoaId())
-                .orElseThrow(() -> new IllegalArgumentException("Pessoa não encontrada."));
+                // Lança 404
+                .orElseThrow(() -> new ResourceNotFoundException("Pessoa", dto.pessoaId()));
         Projeto projeto = projetoService.buscarProjetoPorId(dto.projetoId())
-                .orElseThrow(() -> new IllegalArgumentException("Projeto não encontrado."));
+                // Lança 404
+                .orElseThrow(() -> new ResourceNotFoundException("Projeto", dto.projetoId()));
         Perfil perfil = perfilService.buscarPerfilPorId(dto.perfilId())
-                .orElseThrow(() -> new IllegalArgumentException("Perfil não encontrado."));
+                // Lança 404
+                .orElseThrow(() -> new ResourceNotFoundException("Perfil", dto.perfilId()));
 
         Alocacao novaAlocacao = new Alocacao();
         novaAlocacao.setPessoa(pessoa);
@@ -69,7 +76,8 @@ public class AlocacaoService {
         // Regra 1: Valida se a pessoa já está alocada no projeto
         List<Alocacao> alocacoesNoProjeto = alocacaoRepository.findByPessoaAndProjeto(novaAlocacao.getPessoa(), novaAlocacao.getProjeto());
         if (!alocacoesNoProjeto.isEmpty()) {
-            throw new IllegalArgumentException("Essa pessoa já está alocada neste projeto.");
+            // Lança 409
+            throw new ResourceConflictException("Essa pessoa já está alocada neste projeto.");
         }
 
         // Regra 2: Valida o total de horas semanais em projetos ativos
@@ -84,7 +92,8 @@ public class AlocacaoService {
                 .sum();
 
         if ((horasAtuaisAlocadasEmProjetosAtivos + novaAlocacao.getHorasSemana()) > 40) {
-            throw new IllegalArgumentException("O total de horas semanais para esta pessoa excederá 40, considerando apenas projetos ativos/incompletos.");
+            // Lança 400
+            throw new InvalidDataException("O total de horas semanais para esta pessoa excederá 40, considerando apenas projetos ativos/incompletos.");
         }
 
         Alocacao alocacaoSalva = alocacaoRepository.save(novaAlocacao);

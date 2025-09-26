@@ -30,9 +30,7 @@ public class PerfilController {
 
     @GetMapping("/{id}")
     public ResponseEntity<PerfilViewDTO> buscarPerfilPorId(@PathVariable Long id) {
-        return perfilService.buscarPerfilPorId(id)
-                .map(perfilMapper::toDto)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+        PerfilViewDTO perfil = perfilMapper.toDto(perfilService.buscarPerfilPorIdOrThrow(id));
+        return ResponseEntity.ok(perfil);
     }
 }

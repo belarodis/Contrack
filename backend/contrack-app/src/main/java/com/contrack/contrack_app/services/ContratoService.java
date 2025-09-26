@@ -2,6 +2,9 @@ package com.contrack.contrack_app.services;
 
 import com.contrack.contrack_app.dto.create.ContratoCreateDTO;
 import com.contrack.contrack_app.dto.view.ContratoViewDTO;
+import com.contrack.contrack_app.exceptions.InvalidDataException;
+import com.contrack.contrack_app.exceptions.ResourceConflictException;
+import com.contrack.contrack_app.exceptions.ResourceNotFoundException;
 import com.contrack.contrack_app.mapper.ContratoMapper;
 import com.contrack.contrack_app.models.Contrato;
 import com.contrack.contrack_app.models.Pessoa;
@@ -39,7 +42,7 @@ public class ContratoService {
     // ... os outros métodos do ContratoService (buscarContratos, criarContrato, etc.)
     // ... permanecem inalterados como na versão anterior.
     public List<ContratoViewDTO> buscarContratos() {
-         return contratoRepository.findAll()
+        return contratoRepository.findAll()
                 .stream()
                 .map(contratoMapper::toDto)
                 .collect(Collectors.toList());
@@ -47,10 +50,12 @@ public class ContratoService {
 
     public ContratoViewDTO criarContrato(ContratoCreateDTO dto) {
         Pessoa pessoa = pessoaService.buscarPessoaPorId(dto.pessoaId())
-                .orElseThrow(() -> new IllegalArgumentException("Pessoa não encontrada."));
+                // Lança 404
+                .orElseThrow(() -> new ResourceNotFoundException("Pessoa", dto.pessoaId()));
 
         if (dto.horasSemana() > 40) {
-            throw new IllegalArgumentException("O número de horas semanais no contrato não pode ser maior que 40.");
+            // Lança 400
+            throw new InvalidDataException("O número de horas semanais no contrato não pode ser maior que 40.");
         }
 
         List<Contrato> contratosExistentes = contratoRepository.findByPessoaOrderByDataFimDesc(pessoa);
@@ -58,7 +63,8 @@ public class ContratoService {
             boolean sobrepoe = dto.dataFim().isAfter(contratoExistente.getDataInicio()) &&
                     dto.dataInicio().isBefore(contratoExistente.getDataFim());
             if (sobrepoe) {
-                throw new IllegalArgumentException("O novo contrato se sobrepõe a um contrato existente.");
+                // Lança 409
+                throw new ResourceConflictException("O novo contrato se sobrepõe a um contrato existente.");
             }
         }
         
@@ -72,7 +78,7 @@ public class ContratoService {
         List<Contrato> contratos = contratoRepository.findByPessoaOrderByDataFimDesc(pessoa);
         return contratos.stream()
                 .filter(contrato -> !LocalDate.now().isBefore(contrato.getDataInicio()) &&
-                                    !LocalDate.now().isAfter(contrato.getDataFim()))
+                                     !LocalDate.now().isAfter(contrato.getDataFim()))
                 .findFirst();
     }
 }

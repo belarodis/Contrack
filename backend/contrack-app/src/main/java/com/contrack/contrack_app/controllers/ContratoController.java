@@ -21,12 +21,9 @@ public class ContratoController {
 
     @PostMapping
     public ResponseEntity<ContratoViewDTO> criarContrato(@RequestBody ContratoCreateDTO dto) {
-        try {
-            ContratoViewDTO novoContrato = contratoService.criarContrato(dto);
-            return ResponseEntity.ok(novoContrato);
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.badRequest().build();
-        }
+        // Exceções (404, 409, 400) são tratadas pelo GlobalExceptionHandler
+        ContratoViewDTO novoContrato = contratoService.criarContrato(dto);
+        return ResponseEntity.ok(novoContrato);
     }
 
     @GetMapping

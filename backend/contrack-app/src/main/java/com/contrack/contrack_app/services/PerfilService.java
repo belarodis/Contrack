@@ -1,6 +1,7 @@
 package com.contrack.contrack_app.services;
 
 import com.contrack.contrack_app.dto.view.PerfilViewDTO;
+import com.contrack.contrack_app.exceptions.ResourceNotFoundException; // NOVO IMPORT
 import com.contrack.contrack_app.mapper.PerfilMapper;
 import com.contrack.contrack_app.models.Perfil;
 import com.contrack.contrack_app.repositories.interfaces.IPerfilRepository;
@@ -23,6 +24,11 @@ public class PerfilService {
 
     public Optional<Perfil> buscarPerfilPorId(Long id) {
         return perfilRepository.findById(id);
+    }
+    
+    public Perfil buscarPerfilPorIdOrThrow(Long id) {
+        return perfilRepository.findById(id)
+            .orElseThrow(() -> new ResourceNotFoundException("Perfil", id));
     }
 
     public List<PerfilViewDTO> buscarPerfis() {
