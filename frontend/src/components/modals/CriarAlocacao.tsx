@@ -60,8 +60,10 @@ export default function CriarAlocacao({
       onClose?.();
     } catch (err: unknown) {
       if (axios.isAxiosError(err)) {
-        // independe do status e da mensagem que vier do back
-        toast.error("Alocação inválida");
+        // tenta usar a mensagem vinda do back
+        const msg =
+          (err.response?.data as any)?.message || "Erro ao criar alocação.";
+        toast.error(msg);
       } else {
         toast.error("Erro inesperado. 🤯");
       }
