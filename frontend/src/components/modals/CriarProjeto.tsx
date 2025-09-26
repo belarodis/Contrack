@@ -71,7 +71,7 @@ export default function CriarProjeto({ onClose }: { onClose?: () => void }) {
         />
       </FormField>
 
-      <div className="form-period">
+      <div className="form-period flex">
         <FormField
           label="Período"
           htmlFor="inicio"
@@ -85,9 +85,13 @@ export default function CriarProjeto({ onClose }: { onClose?: () => void }) {
           />
         </FormField>
 
-        <span className="form-period__sep">até</span>
+        <span className="form-period__sep self-center h-[0px] ">até</span>
 
-        <FormField label=" " htmlFor="fim" className="form-field--date">
+        <FormField
+          label=" "
+          htmlFor="fim"
+          className="form-field--date self-end"
+        >
           <input
             id="fim"
             type="date"
