@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import Overlay from "./components/modals/Overlay.tsx";
 import CriarAlocacao from "./components/modals/CriarAlocacao.tsx";
 import { getAlocacoesPorProjeto } from "./services/alocacoes.service.ts";
+import { ToastContainer } from "react-toastify";
 
 type AlocacoesProps = {
   selectedId: number;
@@ -56,10 +57,12 @@ function Alocacoes({ selectedId }: AlocacoesProps) {
       </div>
       {openModal && (
         <Overlay onClose={() => setOpenModal(false)}>
-          <CriarAlocacao
-            onClose={handleClose}
-            projetoId={selectedId}
+          <ToastContainer
+            position="top-center"
+            autoClose={4000}
+            style={{ zIndex: 9999 }}
           />
+          <CriarAlocacao onClose={handleClose} projetoId={selectedId} />
         </Overlay>
       )}
     </div>
