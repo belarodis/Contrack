@@ -15,8 +15,8 @@ function Projetos({ onSelectProjeto, selectedId }: ProjetosProps) {
     const projetos = useProjetos();
 
   return (
-    <div className="bg-[#0A2439] flex flex-col flex-1 h-full rounded-[25px] px-[48px] pt-[30px]">
-      <div className="flex flex-row justify-between items-center">
+    <div className="bg-[#0A2439] flex flex-col flex-1 h-full rounded-[25px] px-[48px] pt-[30px] ">
+      <div className="flex flex-row justify-between items-center ">
         <div className="flex flex-col">
           <h1 className="text-[#9DFFD9] text-[36px] font-semibold">Projetos</h1>
           <p className="text-[#9DA7B0]">
@@ -25,7 +25,7 @@ function Projetos({ onSelectProjeto, selectedId }: ProjetosProps) {
         </div>
           <ButtonPlus onClick={() => setOpenModal(true)}/>
       </div>
-      <div className="grid grid-cols-2 gap-[1vw] pt-[15px]">
+      <div className="grid grid-cols-2 gap-[1vw] pt-[15px] overflow-y-auto pr-[20px]">
         {projetos.map((p) => (
           <Projeto
             key={p.id}
@@ -33,6 +33,7 @@ function Projetos({ onSelectProjeto, selectedId }: ProjetosProps) {
             nome={p.nome}
             onSelect={onSelectProjeto}
             selectedId={selectedId}
+            status={p.status}
           />
         ))}
       </div>

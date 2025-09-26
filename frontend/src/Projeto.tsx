@@ -1,11 +1,14 @@
+import type { ProjetoStatus } from "./models/projeto";
+
 interface ProjetoProps {
   id: number;
   nome: string;
   onSelect: (id: number | null) => void;
   selectedId: number | null;
+  status: ProjetoStatus
 }
 
-function Projeto({ id, nome, onSelect, selectedId }: ProjetoProps) {
+function Projeto({ id, nome, onSelect, selectedId, status}: ProjetoProps) {
   const isSelected = id === selectedId;
   return (
     <div
@@ -29,6 +32,18 @@ function Projeto({ id, nome, onSelect, selectedId }: ProjetoProps) {
         <span className="text-[#C2CCD0]">Descrição: </span>Lorem ipsum dolor sit
         amet consectetur adipiscing elit.
       </p>
+      <div
+  className={`w-[50px] h-[10px] rounded-[100px] ${
+    status === "Ativo"
+      ? "bg-[#6ECD84]" // verde
+      : status === "Finalizado"
+      ? "bg-[#3D5D6A]" // cinza
+      : status === "Incompleto"
+      ? "bg-[#CF6868]" // vermelho
+      : "bg-[#DEB953]" // "Em espera" - amarelo
+  }`}
+/>
+
     </div>
   );
 }

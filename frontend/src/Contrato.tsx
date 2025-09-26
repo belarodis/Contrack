@@ -4,9 +4,10 @@ type ContratoProps = {
   dataFim: string;
   horasSemana: number;
   salarioHora: number;
+  ativo: boolean;
 };
 
-function Contrato({pessoaNome, dataInicio, dataFim, horasSemana, salarioHora}: ContratoProps) {
+function Contrato({pessoaNome, dataInicio, dataFim, horasSemana, salarioHora, ativo}: ContratoProps) {
   return (
     <div className="flex flex-col bg-[#0D3445] h-[18vh] w-full rounded-[2vh] text-white py-[12px] px-[16px] gap-[5px] font-semibold">
       <h3 className="text-[18px] font-bold">{pessoaNome}</h3>
@@ -21,7 +22,7 @@ function Contrato({pessoaNome, dataInicio, dataFim, horasSemana, salarioHora}: C
       </div>
       <p className="text-[13px]">{horasSemana}h/semana</p>
       <p className="text-[13px]">R${salarioHora}/h</p>
-    <div className="w-[50px] h-[10px] rounded-[100px] bg-[#6ECD84]"></div>
+    <div className={`w-[50px] h-[10px] rounded-[100px] ${ativo ? "bg-[#6ECD84]" : "bg-[#3D5D6A]"}`}></div>
     </div>
   );
 }

@@ -22,11 +22,12 @@ function Contratos() {
         {contratos.map((c) => (
           <div key={c.id} className="w-full h-full flex">
             <Contrato
-              pessoaNome={c.pessoaNome}
+              pessoaNome={c.nomePessoa}
               dataInicio={c.dataInicio}
               dataFim={c.dataFim}
               horasSemana={c.horasSemana}
               salarioHora={c.salarioHora}
+              ativo={c.ativo}
             />
           </div>
         ))}
