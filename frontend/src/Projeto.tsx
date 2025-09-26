@@ -57,16 +57,17 @@ function Projeto({
       </div>
 
       <div
-        className={`inline-flex items-center justify-center mt-[10px] px-[12px] py-[4px] rounded-[12px] text-[12px] font-bold w-fit self-start mb-[10px] ${
+        className={`inline-flex items-center justify-center mt-[10px] text-[7px] px-[12px] h-[10px] w-[60px] rounded-[12px] font-bold  self-start mb-[10px] transition-all duration-[0.4s] ${
           status === "Ativo"
-            ? "bg-[#6ECD84] text-[#0D3445]"
+            ? "bg-[#6ECD84] text-[#6ECD84] hover:text-[#0D3445] hover:h-[28px] hover:text-[12px] hover:w-fit"
             : status === "Finalizado"
-            ? "bg-[#3D5D6A] text-white"
+            ? "bg-[#3D5D6A] text-[#3D5D6A] hover:text-white hover:h-[28px] hover:text-[12px] hover:w-fit"
             : status === "Incompleto"
-            ? "bg-[#CF6868] text-white"
-            : "bg-[#DEB953] text-[#0D3445]"
+            ? "bg-[#CF6868] text-[#CF6868] hover:text-white hover:h-[28px] hover:text-[12px] hover:w-fit"
+            : "bg-[#DEB953] text-[#DEB953] hover:text-[#0D3445] hover:h-[28px] hover:text-[12px] hover:w-fit"
         }`}
       >
+        {}
         {status}
       </div>
     </div>
