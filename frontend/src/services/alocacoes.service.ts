@@ -1,5 +1,5 @@
 import { api } from "./api";
-import type { AlocacaoViewDTO } from "../models/alocacao";
+import type { AlocacaoCreateDTO, AlocacaoViewDTO } from "../models/alocacao";
 
 export async function getAlocacoes(): Promise<AlocacaoViewDTO[]> {
     const response = await api.get<AlocacaoViewDTO[]>("/alocacoes")
@@ -9,4 +9,9 @@ export async function getAlocacoes(): Promise<AlocacaoViewDTO[]> {
 export async function getAlocacoesPorProjeto(projetoId: number): Promise<AlocacaoViewDTO[]> {
     const response = await api.get<AlocacaoViewDTO[]>(`/alocacoes/projeto/${projetoId}`)
     return response.data;
+}
+
+export async function createAlocacao(dto: AlocacaoCreateDTO): Promise<AlocacaoCreateDTO> {
+  const res = await api.post<AlocacaoCreateDTO>("/alocacoes", dto);
+  return res.data;
 }

@@ -1,35 +1,63 @@
+import { useState } from "react";
+import { createPessoa } from "../../services/pessoas.service";
 import { FormCard } from "../forms/FormCard";
 import { FormField } from "../forms/FormField";
-import {useState} from "react";
 
-export function CriarPessoa({ onClose }: { onClose?: () => void }) {
-    const [nome, setNome] = useState("");
-    const isValid = nome.trim().length >= 2;
+type CriarPessoaProps = {
+  onClose?: () => void;
+};
 
-    return (
-        <div className="criarPessoa">
-            <FormCard
-                title="Criar Pessoa"
-                onExit={onClose}
-                onSave={() => {
-                    if (!isValid) return;
-                    console.log("Salvar pessoa:", nome);
-                    onClose?.();
-                }}
-            >
-                <FormField
-                    label="Nome"
-                    htmlFor="nome"
-                    hint={!isValid && nome.length > 0 ? "Mínimo de 2 caracteres" : ""}
-                >
-                    <input
-                        id="nome"
-                        value={nome}
-                        onChange={(e) => setNome(e.target.value)}
-                        placeholder="Digite o nome"
-                    />
-                </FormField>
-            </FormCard>
-        </div>
-    );
+export function CriarPessoa({ onClose }: CriarPessoaProps) {
+  const [nome, setNome] = useState("");
+  const [saving, setSaving] = useState(false);
+
+  const isValid = nome.trim().length >= 2;
+  const canSave = isValid && !saving;
+
+  async function handleSave() {
+    if (!canSave) return;
+    setSaving(true);
+    try {
+      await createPessoa({ nome }); // POST
+      onClose?.();
+    } catch (e) {
+      console.error("Erro ao criar pessoa", e);
+    } finally {
+      setSaving(false);
+    }
+  }
+
+  return (
+    <div
+      className="criarPessoa"
+      onKeyDown={(e) => {
+        if (e.key === "Enter" && canSave) handleSave();
+      }}
+    >
+      <FormCard
+        title="Criar Pessoa"
+        onExit={onClose}
+        onSave={handleSave} // botão salvar chama o POST
+        // se teu FormCard/ButtonSave aceitar desabilitar, descomenta:
+        // saveDisabled={!canSave}
+      >
+        <FormField
+          label="Nome"
+          htmlFor="nome"
+          hint={!isValid && nome.length > 0 ? "Mínimo de 2 caracteres" : ""}
+        >
+          <input
+            id="nome"
+            value={nome}
+            onChange={(e) => setNome(e.target.value)}
+            placeholder="Digite o nome"
+            autoFocus
+          />
+        </FormField>
+
+        {/* opcional: feedback visual de saving */}
+        {saving && <p className="text-sm text-gray-400 mt-2">Salvando...</p>}
+      </FormCard>
+    </div>
+  );
 }

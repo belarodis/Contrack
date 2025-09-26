@@ -33,11 +33,15 @@ function Alocacoes({ selectedId }: AlocacoesProps) {
           </div>
         ))}
       </div>
-      {openModal && (
-        <Overlay onClose={() => setOpenModal(false)}>
-          <CriarAlocacao onClose={() => setOpenModal(false)} />
-        </Overlay>
-      )}
+{openModal && (
+  <Overlay onClose={() => setOpenModal(false)}>
+    <CriarAlocacao 
+      onClose={() => setOpenModal(false)} 
+      projetoId={selectedId}   // 👈 passa o valor aqui
+    />
+  </Overlay>
+)}
+
     </div>
   );
 }

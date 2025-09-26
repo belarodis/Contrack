@@ -1,7 +1,8 @@
 export type AlocacaoCreateDTO = {
-  projetoId: number;
-  pessoaId: number;
   horasSemana: number;
+  pessoaId: number;
+  projetoId: number;
+  perfilId: number;
 };
 
 export type AlocacaoViewDTO = {
