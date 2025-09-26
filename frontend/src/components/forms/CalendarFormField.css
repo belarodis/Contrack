@@ -1,0 +1,52 @@
+.calendar-form-field {
+    display: inline-flex;
+    flex-direction: column;
+    gap: 6px;
+    width: fit-content;;
+}
+
+
+.calendar-form-field label:empty {
+    display: none;
+}
+
+.calendar-form-field input[type="date"] {
+    background: #0a7861;
+    border: none;
+    border-radius: 8px;
+    height: 32px;
+    padding: 0 10px;
+    font-size: 16px;
+    color: #ffffff;
+    font-weight: 300;
+    -webkit-appearance: none;
+    appearance: none;
+    text-align: center;
+    cursor: pointer;
+    min-width: 88px;
+}
+
+.calendar-form-field input[type="date"]::-webkit-calendar-picker-indicator {
+    color: white;
+    filter: invert(1) opacity(0.9);
+    cursor: pointer;
+}
+
+.calendar-form-field input[type="date"]:focus {
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(54, 255, 224, 0.35);
+}
+
+/* linha "21/09  até  27/09" */
+.form-period {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.form-period__sep {
+    color: var(--card-muted, #bfe5de);
+    font-size: 16px;
+    font-weight: 600;
+    margin: 0 2px;
+}

@@ -1,0 +1,78 @@
+/* FormDropdown.css — white capsule dropdown */
+:root {
+  --drop-bg: rgba(255, 255, 255, 0.6);
+  --drop-text: #264f51;
+  --drop-border: #ffffff;
+  --drop-hover: #d4e0e0;
+  --drop-focus: #36ffe0;
+}
+
+.dropdown {
+  position: relative;
+  display: inline-block;
+  width: 100%;
+}
+
+.dropdown__native {
+  background: var(--drop-bg); /* usa o token configurado no :root */
+  border: 2px solid #ffffff;
+  border-radius: 12px;
+  height: 56px;
+  width: 100%; /* ocupa toda a largura do FormField */
+  padding: 0 42px 0 14px; /* espaço pro texto + seta à direita */
+  color: var(--drop-text); /* texto mais escuro */
+  -webkit-appearance: none;
+  appearance: none;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.55),
+    0 10px 24px rgba(0, 0, 0, 0.22);
+  transition: background 0.2s ease, box-shadow 0.2s ease, transform 0.02s ease;
+  cursor: pointer;
+}
+
+.dropdown::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  right: 18px;
+  width: 22px;
+  height: 22px;
+  transform: translateY(-50%);
+  pointer-events: none;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: 22px 22px;
+}
+
+.dropdown__native:hover {
+  background: var(--drop-hover);
+}
+
+.dropdown__native:focus-visible {
+  box-shadow: 0 0 0 3px rgba(54, 255, 224, 0.3), 0 10px 24px rgba(0, 0, 0, 0.22),
+    inset 0 1px 0 rgba(255, 255, 255, 0.55);
+}
+
+.dropdown__native:active {
+  transform: translateY(0.5px);
+}
+
+.dropdown__native:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+/* remove seta no IE/Edge legado */
+.dropdown__native::-ms-expand {
+  display: none;
+}
+
+/* estados opcionais */
+.dropdown--error .dropdown__native {
+  border-color: #ff6464;
+  box-shadow: 0 0 0 3px rgba(255, 100, 100, 0.25),
+    0 10px 24px rgba(0, 0, 0, 0.22), inset 0 1px 0 rgba(255, 255, 255, 0.55);
+}
+
+.dropdown--ok .dropdown__native {
+  border-color: #66ffd9;
+}
