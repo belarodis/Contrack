@@ -13,9 +13,14 @@ import com.contrack.contrack_app.models.Pessoa;
 import com.contrack.contrack_app.models.Projeto;
 import com.contrack.contrack_app.repositories.interfaces.IAlocacaoRepository;
 import org.springframework.stereotype.Service;
+
+import java.time.DayOfWeek;
+import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Service
 public class AlocacaoService {
@@ -34,7 +39,6 @@ public class AlocacaoService {
         this.alocacaoMapper = alocacaoMapper;
     }
 
-    // ... (Métodos buscarAlocacoes, buscarAlocacaoPorId, buscarAlocacoesPorProjetoId - SEM ALTERAÇÃO) ...
     public List<AlocacaoViewDTO> buscarAlocacoes() {
         return alocacaoRepository.findAll()
                 .stream()
@@ -48,7 +52,6 @@ public class AlocacaoService {
 
     public List<AlocacaoViewDTO> buscarAlocacoesPorProjetoId(Long projetoId) {
         Projeto projeto = projetoService.buscarProjetoPorId(projetoId)
-                // Lança 404
                 .orElseThrow(() -> new ResourceNotFoundException("Projeto", projetoId));
 
         return alocacaoRepository.findByProjeto(projeto)
@@ -79,7 +82,6 @@ public class AlocacaoService {
 
         // REGRA 2: Um projeto deve ter no MÁXIMO um gerente.
         if (perfil.getTipo() == Perfil.TipoPerfil.gerente) {
-            // Conta quantos gerentes já existem neste projeto
             long numGerentesExistentes = alocacaoRepository.findByProjeto(projeto).stream()
                 .filter(aloc -> aloc.getPerfil().getTipo() == Perfil.TipoPerfil.gerente)
                 .count();
@@ -89,25 +91,82 @@ public class AlocacaoService {
             }
         }
 
-        // REGRA 3: Limite de 40 horas semanais em projetos ativos ou incompletos.
-        int horasAtuaisAlocadasEmProjetosAtivos = alocacaoRepository.findByPessoa(pessoa)
-                .stream()
-                .filter(aloc -> {
-                    Optional<ProjetoViewDTO> projetoDtoOpt = projetoService.buscarProjetoPorIdComStatus(aloc.getProjeto().getId());
-                    if (!projetoDtoOpt.isPresent()) return false;
-                    
-                    String status = projetoDtoOpt.get().status();
-                    return "Ativo".equals(status) || "Incompleto".equals(status);
-                })
-                .mapToInt(Alocacao::getHorasSemana)
-                .sum();
+        // REGRA 3: Validação Temporal de Capacidade (40 horas)
+        
+        // 1. Define o período do novo projeto
+        LocalDate novoProjetoInicio = projeto.getDataInicio();
+        LocalDate novoProjetoFim = projeto.getDataFim();
 
-        if ((horasAtuaisAlocadasEmProjetosAtivos + novaAlocacao.getHorasSemana()) > 40) {
-            throw new InvalidDataException(
-                "O total de horas semanais para esta pessoa excederá o limite de 40 horas, considerando projetos ativos/incompletos. Horas atuais: " + 
-                horasAtuaisAlocadasEmProjetosAtivos
-            );
+        // 2. Busca TODAS as alocações que consomem capacidade (Ativo ou Incompleto)
+        List<Alocacao> alocacoesAtivasExistentes = alocacaoRepository.findByPessoa(pessoa)
+            .stream()
+            .filter(aloc -> {
+                Optional<ProjetoViewDTO> projetoDtoOpt = projetoService.buscarProjetoPorIdComStatus(aloc.getProjeto().getId());
+                if (!projetoDtoOpt.isPresent()) return false;
+                
+                String status = projetoDtoOpt.get().status();
+                
+                // AJUSTE: Apenas Ativo e Incompleto consomem o limite de 40h.
+                // "Em Espera" NÃO É considerado um compromisso de capacidade.
+                return "Ativo".equals(status) || "Incompleto".equals(status); 
+            })
+            .collect(Collectors.toList());
+
+        // 3. Determina o período global que precisa ser verificado (o maior período de interesse)
+        LocalDate periodoGlobalInicio = novoProjetoInicio;
+        LocalDate periodoGlobalFim = novoProjetoFim;
+
+        if (!alocacoesAtivasExistentes.isEmpty()) {
+            // Encontra a data de início mais cedo e a data de fim mais tarde
+            LocalDate minExistingDate = alocacoesAtivasExistentes.stream()
+                .map(aloc -> aloc.getProjeto().getDataInicio())
+                .min(LocalDate::compareTo)
+                .get();
+
+            LocalDate maxExistingDate = alocacoesAtivasExistentes.stream()
+                .map(aloc -> aloc.getProjeto().getDataFim())
+                .max(LocalDate::compareTo)
+                .get();
+
+            periodoGlobalInicio = Stream.of(minExistingDate, novoProjetoInicio).min(LocalDate::compareTo).get();
+            periodoGlobalFim = Stream.of(maxExistingDate, novoProjetoFim).max(LocalDate::compareTo).get();
         }
+
+        // 4. Itera sobre CADA DIA ÚTIL no período global para checar sobrecarga
+        try {
+            Stream.iterate(periodoGlobalInicio, data -> data.plusDays(1))
+                .limit(ChronoUnit.DAYS.between(periodoGlobalInicio, periodoGlobalFim) + 1)
+                // Filtra SÓ dias úteis (Segunda a Sexta)
+                .filter(data -> data.getDayOfWeek() != DayOfWeek.SATURDAY && data.getDayOfWeek() != DayOfWeek.SUNDAY)
+                .forEach(diaUtil -> {
+                    // Soma as horas alocadas para este DIA ÚTIL
+                    int horasTotalNoDia = novaAlocacao.getHorasSemana(); // Começa com a nova alocação
+
+                    for (Alocacao aloc : alocacoesAtivasExistentes) {
+                        Projeto projExistente = aloc.getProjeto();
+                        
+                        // Verifica se o projeto existente é vigente neste dia útil
+                        boolean projetoVigenteNoDia = !diaUtil.isBefore(projExistente.getDataInicio()) &&
+                                                    !diaUtil.isAfter(projExistente.getDataFim());
+
+                        if (projetoVigenteNoDia) {
+                            horasTotalNoDia += aloc.getHorasSemana();
+                        }
+                    }
+
+                    if (horasTotalNoDia > 40) {
+                        throw new ResourceConflictException(
+                            "A alocação excede o limite de 40 horas semanais em um conflito temporal. " +
+                            "Conflito de " + horasTotalNoDia + " horas encontrado no dia: " + diaUtil + 
+                            ". (Apenas projetos Ativos/Incompletos são contados.)"
+                        );
+                    }
+                });
+        } catch (ResourceConflictException e) {
+            // Captura a exceção lançada dentro do forEach e a relança como InvalidDataException
+            throw new InvalidDataException(e.getMessage());
+        }
+
         
         Alocacao alocacaoSalva = alocacaoRepository.save(novaAlocacao);
         return alocacaoMapper.toDto(alocacaoSalva);

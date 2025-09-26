@@ -116,51 +116,51 @@ public class ProjetoService {
         return custoTotal;
     }
 
-    /**
-     * Calcula o custo do projeto em um período definido (histórico ou parcial).
-     * Considera apenas dias úteis na interseção de Projeto x Contrato x Período Solicitado.
-     */
-    public double calcularCustoPorPeriodo(Projeto projeto, LocalDate periodoInicio, LocalDate periodoFim) {
-        double custoTotal = 0.0;
-        Iterable<Alocacao> alocacoes = alocacaoRepository.findByProjeto(projeto);
+   public double calcularCustoPorPeriodo(Projeto projeto, LocalDate periodoInicio, LocalDate periodoFim) {
+    String status = buscarProjetoPorIdComStatus(projeto.getId())
+        .map(dto -> dto.status())
+        .orElse("Concluído");
 
-        // Calcula a INTERSEÇÃO entre o período solicitado e o período do Projeto
-        LocalDate inicioReal = Stream.of(periodoInicio, projeto.getDataInicio()).max(LocalDate::compareTo).get();
-        LocalDate fimReal = Stream.of(periodoFim, projeto.getDataFim()).min(LocalDate::compareTo).get();
+    if (!("Ativo".equals(status) || "Incompleto".equals(status))) {
+        return 0.0;
+    }
 
-        if (inicioReal.isAfter(fimReal)) {
-            return 0.0;
-        }
-        
-        final double DIAS_UTEIS_SEMANA = 5.0;
+    double custoTotal = 0.0;
+    Iterable<Alocacao> alocacoes = alocacaoRepository.findByProjeto(projeto);
 
-        for (Alocacao alocacao : alocacoes) {
-            if (alocacao.getHorasSemana() <= 0) continue;
-            final double horasDiariasAlocadas = alocacao.getHorasSemana() / DIAS_UTEIS_SEMANA;
+    LocalDate inicioReal = Stream.of(periodoInicio, projeto.getDataInicio()).max(LocalDate::compareTo).get();
+    LocalDate fimReal = Stream.of(periodoFim, projeto.getDataFim()).min(LocalDate::compareTo).get();
 
-            // Busca TODOS os contratos que se interseccionam com o período real de cálculo
-            List<Contrato> contratos = contratoService.getContratosNosPeriodo(
-                alocacao.getPessoa(), inicioReal, fimReal);
+    if (inicioReal.isAfter(fimReal)) {
+        return 0.0;
+    }
+    
+    final double DIAS_UTEIS_SEMANA = 5.0;
 
-            for (Contrato contrato : contratos) {
-                
-                // Interseção Tripla: (Período Solicitado ∩ Projeto) ∩ (Contrato)
-                LocalDate intersecaoInicio = Stream.of(inicioReal, contrato.getDataInicio()).max(LocalDate::compareTo).get();
-                LocalDate intersecaoFim = Stream.of(fimReal, contrato.getDataFim()).min(LocalDate::compareTo).get();
+    for (Alocacao alocacao : alocacoes) {
+        if (alocacao.getHorasSemana() <= 0) continue;
+        final double horasDiariasAlocadas = alocacao.getHorasSemana() / DIAS_UTEIS_SEMANA;
 
-                if (!intersecaoInicio.isAfter(intersecaoFim)) {
-                    // Itera e soma apenas os dias úteis na interseção
-                    custoTotal += Stream.iterate(intersecaoInicio, data -> data.plusDays(1))
-                        .limit(ChronoUnit.DAYS.between(intersecaoInicio, intersecaoFim) + 1)
-                        .filter(data -> data.getDayOfWeek() != DayOfWeek.SATURDAY && data.getDayOfWeek() != DayOfWeek.SUNDAY)
-                        .mapToDouble(data -> contrato.getSalarioHora() * horasDiariasAlocadas)
-                        .sum();
-                }
+        List<Contrato> contratos = contratoService.getContratosNosPeriodo(
+            alocacao.getPessoa(), inicioReal, fimReal);
+
+        for (Contrato contrato : contratos) {
+            
+            LocalDate intersecaoInicio = Stream.of(inicioReal, contrato.getDataInicio()).max(LocalDate::compareTo).get();
+            LocalDate intersecaoFim = Stream.of(fimReal, contrato.getDataFim()).min(LocalDate::compareTo).get();
+
+            if (!intersecaoInicio.isAfter(intersecaoFim)) {
+                custoTotal += Stream.iterate(intersecaoInicio, data -> data.plusDays(1))
+                    .limit(ChronoUnit.DAYS.between(intersecaoInicio, intersecaoFim) + 1)
+                    .filter(data -> data.getDayOfWeek() != DayOfWeek.SATURDAY && data.getDayOfWeek() != DayOfWeek.SUNDAY)
+                    .mapToDouble(data -> contrato.getSalarioHora() * horasDiariasAlocadas)
+                    .sum();
             }
         }
-
-        return custoTotal;
     }
+
+    return custoTotal;
+}
 
     public boolean isProjetoAtivo(Projeto projeto) {
         LocalDate hoje = LocalDate.now();
