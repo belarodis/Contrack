@@ -2,6 +2,7 @@ package com.contrack.contrack_app.services;
 
 import com.contrack.contrack_app.dto.create.PessoaCreateDTO;
 import com.contrack.contrack_app.dto.view.PessoaViewDTO;
+import com.contrack.contrack_app.exceptions.ResourceNotFoundException; 
 import com.contrack.contrack_app.mapper.PessoaMapper;
 import com.contrack.contrack_app.models.Pessoa;
 import com.contrack.contrack_app.repositories.interfaces.IPessoaRepository;
@@ -32,14 +33,19 @@ public class PessoaService {
     public Optional<Pessoa> buscarPessoaPorId(Long id) {
         return pessoaRepository.findById(id);
     }
+    
+    public Pessoa buscarPessoaPorIdOrThrow(Long id) {
+        return pessoaRepository.findById(id)
+            .orElseThrow(() -> new ResourceNotFoundException("Pessoa", id));
+    }
 
     public List<PessoaViewDTO> buscarPessoas() {
         return pessoaRepository.findAll()
                 .stream()
                 .map(pessoaMapper::toDto)
                 .sorted(Comparator
-                    .comparing(PessoaViewDTO::disponivel).reversed() // ativos primeiro
-                    .thenComparing(PessoaViewDTO::nome)) //dps ordena tudo
+                        .comparing(PessoaViewDTO::disponivel).reversed() // ativos primeiro
+                        .thenComparing(PessoaViewDTO::nome)) //dps ordena tudo
                 .collect(Collectors.toList());
     }
 }

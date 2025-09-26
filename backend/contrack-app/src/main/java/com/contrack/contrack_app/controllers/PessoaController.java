@@ -1,6 +1,5 @@
 package com.contrack.contrack_app.controllers;
 
-
 import com.contrack.contrack_app.dto.create.PessoaCreateDTO;
 import com.contrack.contrack_app.dto.view.PessoaViewDTO;
 import com.contrack.contrack_app.mapper.PessoaMapper;
@@ -37,9 +36,7 @@ public class PessoaController {
     
     @GetMapping("/{id}")
     public ResponseEntity<PessoaViewDTO> buscarPessoaPorId(@PathVariable Long id) {
-        return pessoaService.buscarPessoaPorId(id)
-                .map(pessoaMapper::toDto)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+        PessoaViewDTO pessoa = pessoaMapper.toDto(pessoaService.buscarPessoaPorIdOrThrow(id));
+        return ResponseEntity.ok(pessoa);
     }
 }
