@@ -52,6 +52,7 @@ function Projetos({ onSelectProjeto, selectedId }: ProjetosProps) {
             key={p.id}
             id={p.id}
             nome={p.nome}
+            descricao={p.descricao}
             onSelect={onSelectProjeto}
             selectedId={selectedId}
             status={p.status}

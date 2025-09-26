@@ -1,25 +1,28 @@
 import type { ProjetoStatus } from "./models/projeto";
 
 interface ProjetoProps {
-  id: number;
-  nome: string;
-  onSelect: (id: number | null) => void;
-  selectedId: number | null;
-  status: ProjetoStatus
+    id: number;
+    nome: string;
+    descricao: string;
+    onSelect: (id: number | null) => void;
+    selectedId: number | null;
+    status: ProjetoStatus;
 }
 
-function Projeto({ id, nome, onSelect, selectedId, status}: ProjetoProps) {
+function Projeto({ id, nome, descricao, onSelect, selectedId, status }: ProjetoProps) {
     const isSelected = id === selectedId;
     return (
         <div
-            onClick={() => {isSelected ? onSelect(null) : onSelect(id)}}
+            onClick={() => {
+                isSelected ? onSelect(null) : onSelect(id);
+            }}
             className={`flex flex-col justify-between ${
                 isSelected
                     ? "bg-[#074E56] shadow-[0_0_20px_rgba(157,255,217,0.6)] outline-[#04FDE0]"
                     : "outline-transparent"
             } bg-[#0D3445] hover:cursor-pointer hover:shadow-[0_0_20px_rgba(157,255,217,0.6)] hover:outline-[#04FDE0] outline-[2px] transition-all duration-[0.3s] h-[22vh] w-full rounded-[2vh] text-white py-[12px] px-[16px] gap-[5px] font-semibold`}
         >
-            {/* Conteúdo do card */}
+
             <div className="flex flex-col gap-[5px] h-fit">
                 <h3 className="text-[18px] font-bold">{nome}</h3>
                 <div className="flex flex-row gap-[15px]">
@@ -31,22 +34,23 @@ function Projeto({ id, nome, onSelect, selectedId, status}: ProjetoProps) {
                     </p>
                 </div>
                 <p className="text-[13px]">
-                    <span className="text-[#C2CCD0]">Descrição: </span>Lorem ipsum dolor sit
-                    amet consectetur adipiscing elit.
+                    <span className="text-[#C2CCD0]">Descrição: </span>{descricao}
                 </p>
             </div>
 
             <div
-                className={`w-[50px] h-[15px] rounded-[10px] mb-[10px] ${
+                className={`inline-flex items-center justify-center mt-[10px] px-[12px] py-[4px] rounded-[12px] text-[12px] font-bold w-fit self-start mb-[10px] ${
                     status === "Ativo"
-                        ? "bg-[#6ECD84]"
+                        ? "bg-[#6ECD84] text-[#0D3445]"
                         : status === "Finalizado"
-                            ? "bg-[#3D5D6A]"
+                            ? "bg-[#3D5D6A] text-white"
                             : status === "Incompleto"
-                                ? "bg-[#CF6868]"
-                                : "bg-[#DEB953]"
+                                ? "bg-[#CF6868] text-white"
+                                : "bg-[#DEB953] text-[#0D3445]"
                 }`}
-            />
+            >
+                {status}
+            </div>
         </div>
     );
 }
