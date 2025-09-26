@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
 import java.util.List;
+
 @CrossOrigin(origins = "http://localhost:5173")
 @RestController
 @RequestMapping("/projetos")
@@ -48,6 +49,7 @@ public class ProjetoController {
     @GetMapping("/{id}/custo-total")
     public ResponseEntity<Double> calcularCustoTotal(@PathVariable Long id) {
         Projeto projeto = projetoService.buscarProjetoPorIdOrThrow(id);
+        
         double custo = projetoService.calcularCustoTotal(projeto);
         return ResponseEntity.ok(custo);
     }
@@ -59,6 +61,7 @@ public class ProjetoController {
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate dataFim) {
         
         Projeto projeto = projetoService.buscarProjetoPorIdOrThrow(id);
+        
         double custo = projetoService.calcularCustoPorPeriodo(projeto, dataInicio, dataFim);
         return ResponseEntity.ok(custo);
     }

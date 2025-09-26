@@ -21,7 +21,6 @@ public class AlocacaoController {
         this.alocacaoMapper = alocacaoMapper;
     }
 
-    // Endpoint para criar uma nova alocação
     @PostMapping
     public ResponseEntity<AlocacaoViewDTO> criarAlocacao(@RequestBody AlocacaoCreateDTO dto) {
         // Exceções (404, 409, 400) são tratadas pelo GlobalExceptionHandler
@@ -29,14 +28,12 @@ public class AlocacaoController {
         return ResponseEntity.ok(novaAlocacao);
     }
 
-    // Endpoint para buscar todas as alocações
     @GetMapping
     public ResponseEntity<List<AlocacaoViewDTO>> buscarAlocacoes() {
         List<AlocacaoViewDTO> alocacoes = alocacaoService.buscarAlocacoes();
         return ResponseEntity.ok(alocacoes);
     }
     
-    // Endpoint para buscar alocação por ID
     @GetMapping("/{id}")
     public ResponseEntity<AlocacaoViewDTO> buscarAlocacaoPorId(@PathVariable Long id) {
         return alocacaoService.buscarAlocacaoPorId(id)
@@ -45,9 +42,8 @@ public class AlocacaoController {
                 .orElse(ResponseEntity.notFound().build());
     }
     
-    @GetMapping("/projeto/{projetoId}")
+    @GetMapping("/projetos/{projetoId}/alocacoes")
     public ResponseEntity<List<AlocacaoViewDTO>> buscarAlocacoesPorProjeto(@PathVariable Long projetoId) {
-        // Exceção (404) é tratada pelo GlobalExceptionHandler (lançada no Service)
         List<AlocacaoViewDTO> alocacoes = alocacaoService.buscarAlocacoesPorProjetoId(projetoId);
         return ResponseEntity.ok(alocacoes);
     }
