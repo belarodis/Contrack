@@ -7,7 +7,7 @@ export async function getAlocacoes(): Promise<AlocacaoViewDTO[]> {
 }
 
 export async function getAlocacoesPorProjeto(projetoId: number): Promise<AlocacaoViewDTO[]> {
-    const response = await api.get<AlocacaoViewDTO[]>(`/alocacoes/projeto/${projetoId}`)
+    const response = await api.get<AlocacaoViewDTO[]>(`/alocacoes/projetos/${projetoId}/alocacoes`)
     return response.data;
 }
 

@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import Overlay from "./components/modals/Overlay.tsx";
 import CriarContrato from "./components/modals/CriarContrato.tsx";
 import { getContratos } from "./services/contratos.service.ts";
+import { ToastContainer } from "react-toastify";
 
 function Contratos() {
   const [contratos, setContratos] = useState<any[]>([]);
@@ -55,6 +56,11 @@ function Contratos() {
       </div>
       {openModal && (
         <Overlay onClose={() => setOpenModal(false)}>
+          <ToastContainer
+            position="top-center"
+            autoClose={4000}
+            style={{ zIndex: 9999 }}
+          />
           <CriarContrato onClose={handleClose} />
         </Overlay>
       )}

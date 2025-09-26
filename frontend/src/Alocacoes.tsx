@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import Overlay from "./components/modals/Overlay.tsx";
 import CriarAlocacao from "./components/modals/CriarAlocacao.tsx";
 import { getAlocacoesPorProjeto } from "./services/alocacoes.service.ts";
+import { ToastContainer } from "react-toastify";
 
 type AlocacoesProps = {
     selectedId: number;
@@ -57,13 +58,32 @@ function Alocacoes({ selectedId }: AlocacoesProps) {
                 ))}
             </div>
 
-            {openModal && (
-                <Overlay onClose={() => setOpenModal(false)}>
-                    <CriarAlocacao onClose={handleClose} projetoId={selectedId} />
-                </Overlay>
-            )}
-        </div>
-    );
+
+      {/* grid com scroll */}
+      <div className="grid grid-cols-2 gap-[1vw] pl-[5px] pb-[20px] pt-[15px] pr-[20px] h-full min-h-0 overflow-y-auto">
+        {alocacoes.map((a) => (
+          <div key={a.id} className="w-full h-full flex">
+            <Alocacao
+              nomePessoa={a.nomePessoa}
+              tipoPerfil={a.tipoPerfil}
+              horasSemana={a.horasSemana}
+            />
+          </div>
+        ))}
+      </div>
+      {openModal && (
+        <Overlay onClose={() => setOpenModal(false)}>
+          <ToastContainer
+            position="top-center"
+            autoClose={4000}
+            style={{ zIndex: 9999 }}
+          />
+          <CriarAlocacao onClose={handleClose} projetoId={selectedId} />
+        </Overlay>
+      )}
+    </div>
+  );
+
 }
 
 export default Alocacoes;

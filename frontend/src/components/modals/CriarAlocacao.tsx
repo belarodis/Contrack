@@ -5,6 +5,8 @@ import { type Option } from "../forms/FormDropdown";
 import { usePessoas } from "../../hooks/usePessoas";
 import { usePerfis } from "../../hooks/usePerfis";
 import { createAlocacao } from "../../services/alocacoes.service";
+import { toast } from "react-toastify";
+import axios from "axios";
 
 function containsOnlyDigits(str: string): boolean {
   return /^[0-9]+$/.test(str);
@@ -52,10 +54,18 @@ export default function CriarAlocacao({
         projetoId: Number(projetoId),
         perfilId: Number(perfil),
       };
+
       await createAlocacao(dto); // POST
+      toast.success("Alocação criada com sucesso! 🎉");
       onClose?.();
-    } catch (e) {
-      console.error("Erro ao criar alocacao", e);
+    } catch (err: unknown) {
+      if (axios.isAxiosError(err)) {
+        // independe do status e da mensagem que vier do back
+        toast.error("Alocação inválida");
+      } else {
+        toast.error("Erro inesperado. 🤯");
+      }
+      console.error("Erro ao criar alocação:", err);
     } finally {
       setSaving(false);
     }
