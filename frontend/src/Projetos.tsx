@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import Overlay from "./components/modals/Overlay.tsx";
 import CriarProjeto from "./components/modals/CriarProjeto.tsx";
 import { getProjetos } from "./services/projeto.service.ts";
+import { ToastContainer } from "react-toastify";
 
 interface ProjetosProps {
   onSelectProjeto: (id: number | null) => void;
@@ -63,6 +64,11 @@ function Projetos({ onSelectProjeto, selectedId }: ProjetosProps) {
       </div>
       {openModal && (
         <Overlay onClose={() => setOpenModal(false)}>
+          <ToastContainer
+            position="top-center"
+            autoClose={4000}
+            style={{ zIndex: 9999 }}
+          />
           <CriarProjeto onClose={handleClose} />
         </Overlay>
       )}

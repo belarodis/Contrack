@@ -6,6 +6,7 @@ import Pessoas from "./Pessoas";
 import Projetos from "./Projetos";
 import Custos from "./Custos";
 
+
 function App() {
   const [selectedProjeto, setSelectedProjeto] = useState<null | number>(null);
 
@@ -47,6 +48,7 @@ function App() {
           >
             <Alocacoes selectedId={selectedProjeto}/>
             <Custos projetoId={selectedProjeto} />
+
           </motion.div>
         )}
       </AnimatePresence>

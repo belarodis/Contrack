@@ -2,6 +2,8 @@ import { useState } from "react";
 import { FormCard } from "../forms/FormCard";
 import { FormField } from "../forms/FormField";
 import { createProjetos } from "../../services/projeto.service";
+import { toast } from "react-toastify";
+import axios from "axios";
 
 export default function CriarProjeto({ onClose }: { onClose?: () => void }) {
   const [nome, setNome] = useState("");
@@ -17,15 +19,33 @@ export default function CriarProjeto({ onClose }: { onClose?: () => void }) {
     setSaving(true);
     try {
       const dto = {
-        nome: nome,
+        nome,
         dataInicio: inicio, // YYYY-MM-DD
         dataFim: fim, // YYYY-MM-DD
-        descricao: descricao,
+        descricao,
       };
+
       await createProjetos(dto); // POST
+      toast.success("Projeto criado com sucesso! 🎉");
       onClose?.();
-    } catch (e) {
-      console.error("Erro ao criar contrato", e);
+    } catch (err: unknown) {
+      if (axios.isAxiosError(err)) {
+        const status = err.response?.status;
+        const msg = (err.response?.data as any)?.message;
+
+        if (status === 409) {
+          toast.error(msg ?? "Esse projeto conflita com um existente.");
+        } else if (status === 500) {
+          toast.error("Já existe um projeto com esse nome.");
+        } else {
+          toast.error(
+            `Erro${status ? ` ${status}` : ""}: ${msg ?? "Falha inesperada."}`
+          );
+        }
+      } else {
+        toast.error("Erro inesperado. 🤯");
+      }
+      console.error("Erro ao criar projeto:", err);
     } finally {
       setSaving(false);
     }

@@ -5,6 +5,7 @@ type AlocacaoProps = {
 };
 
 function Alocacao({ nomePessoa, tipoPerfil, horasSemana }: AlocacaoProps) {
+
     return (
         <div className="flex flex-col bg-[#0D3445] w-full rounded-[2vh] text-white py-[15px] px-[20px] font-semibold h-fit">
             <h3 className="text-[22px] font-bold mb-[6px] truncate whitespace-nowrap">
