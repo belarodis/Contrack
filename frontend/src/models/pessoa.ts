@@ -7,6 +7,5 @@ export type PessoaCreateDTO = {
 export type PessoaViewDTO = {
   id: number;
   nome: string;
-  cargo: string;
-  salarioHora: number;
+  disponivel: boolean;
 };

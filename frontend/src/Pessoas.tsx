@@ -19,7 +19,7 @@ function Pessoas() {
       <div className="grid grid-cols-3 gap-[1vw] pt-[15px]">
         {pessoas.map((p) => (
           <div key={p.id} className="w-full h-full flex">
-            <Pessoa nome={p.nome}/>
+            <Pessoa nome={p.nome} disponivel={p.disponivel}/>
           </div>
         ))}
       </div>
