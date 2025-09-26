@@ -10,7 +10,7 @@ type AlocacoesProps = {
 };
 
 function Alocacoes({ selectedId }: AlocacoesProps) {
-    const [alocacoes, setAlocacoes] = useState<never[]>([]);
+    const [alocacoes, setAlocacoes] = useState<unknown[]>([]);
     const [openModal, setOpenModal] = useState(false);
 
     // carregar ao montar ou quando selectedId mudar
