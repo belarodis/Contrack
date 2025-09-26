@@ -3,7 +3,7 @@ import Pessoa from "./Pessoa";
 import { useState, useEffect } from "react";
 import Overlay from "./components/modals/Overlay.tsx";
 import { CriarPessoa } from "./components/modals/CriarPessoa.tsx";
-import { getPessoas } from "./services/pessoas.service"; // 👈 usar o service diretamente
+import { getPessoas } from "./services/pessoas.service.ts";
 
 function Pessoas() {
   const [pessoas, setPessoas] = useState<any[]>([]);

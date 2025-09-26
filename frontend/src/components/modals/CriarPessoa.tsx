@@ -37,9 +37,7 @@ export function CriarPessoa({ onClose }: CriarPessoaProps) {
       <FormCard
         title="Criar Pessoa"
         onExit={onClose}
-        onSave={handleSave} // botão salvar chama o POST
-        // se teu FormCard/ButtonSave aceitar desabilitar, descomenta:
-        // saveDisabled={!canSave}
+        onSave={handleSave}
       >
         <FormField
           label="Nome"
@@ -54,8 +52,7 @@ export function CriarPessoa({ onClose }: CriarPessoaProps) {
             autoFocus
           />
         </FormField>
-
-        {/* opcional: feedback visual de saving */}
+        
         {saving && <p className="text-sm text-gray-400 mt-2">Salvando...</p>}
       </FormCard>
     </div>

@@ -1,14 +1,35 @@
 import ButtonPlus from "./components/buttons/ButtonPlus.tsx";
 import Contrato from "./Contrato";
-import { useContratos } from "./hooks/useContratos";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Overlay from "./components/modals/Overlay.tsx";
 import CriarContrato from "./components/modals/CriarContrato.tsx";
+import { getContratos } from "./services/contratos.service.ts";
 
 function Contratos() {
-  const contratos = useContratos();
+  const [contratos, setContratos] = useState<any[]>([]);
 
   const [openModal, setOpenModal] = useState(false);
+
+  // função pra carregar as pessoas
+  async function carregarContratos() {
+    try {
+      const data = await getContratos();
+      setContratos(data);
+    } catch (e) {
+      console.error("Erro ao carregar pessoas", e);
+    }
+  }
+
+  // carregar ao montar o componente
+  useEffect(() => {
+    carregarContratos();
+  }, []);
+
+  // fechar modal + recarregar lista
+  function handleClose() {
+    setOpenModal(false);
+    carregarContratos();
+  }
 
   return (
     <div className="bg-[#0A2439] flex flex-col rounded-[25px] px-[48px] pt-[30px] basis-2/3 min-h-0">
@@ -34,7 +55,7 @@ function Contratos() {
       </div>
       {openModal && (
         <Overlay onClose={() => setOpenModal(false)}>
-          <CriarContrato onClose={() => setOpenModal(false)} />
+          <CriarContrato onClose={handleClose} />
         </Overlay>
       )}
     </div>
