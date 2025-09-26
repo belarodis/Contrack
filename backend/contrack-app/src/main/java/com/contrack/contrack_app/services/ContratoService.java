@@ -33,14 +33,11 @@ public class ContratoService {
         return contratoRepository.findById(idContrato);
     }
 
-    // Novo método para buscar um contrato por ID e retorná-lo como DTO com status
     public Optional<ContratoViewDTO> buscarContratoPorIdComStatus(Long idContrato) {
         return contratoRepository.findById(idContrato)
                 .map(contratoMapper::toDto);
     }
     
-    // ... os outros métodos do ContratoService (buscarContratos, criarContrato, etc.)
-    // ... permanecem inalterados como na versão anterior.
     public List<ContratoViewDTO> buscarContratos() {
         return contratoRepository.findAll()
                 .stream()
@@ -78,7 +75,33 @@ public class ContratoService {
         List<Contrato> contratos = contratoRepository.findByPessoaOrderByDataFimDesc(pessoa);
         return contratos.stream()
                 .filter(contrato -> !LocalDate.now().isBefore(contrato.getDataInicio()) &&
-                                     !LocalDate.now().isAfter(contrato.getDataFim()))
+                        !LocalDate.now().isAfter(contrato.getDataFim()))
                 .findFirst();
+    }
+    
+    public Optional<Contrato> getContratoAtivoDurantePeriodo(Pessoa pessoa, LocalDate periodoInicio,
+            LocalDate periodoFim) {
+        List<Contrato> contratos = contratoRepository.findByPessoaOrderByDataFimDesc(pessoa);
+        return contratos.stream()
+                .filter(contrato -> {
+                    LocalDate contratoInicio = contrato.getDataInicio();
+                    LocalDate contratoFim = contrato.getDataFim();
+
+                    return !periodoFim.isBefore(contratoInicio) && !periodoInicio.isAfter(contratoFim);
+                })
+                .findFirst();
+    }
+
+    public List<Contrato> getContratosNosPeriodo(Pessoa pessoa, LocalDate periodoInicio, LocalDate periodoFim) {
+        List<Contrato> contratos = contratoRepository.findByPessoaOrderByDataFimDesc(pessoa);
+        return contratos.stream()
+                .filter(contrato -> {
+                    LocalDate contratoInicio = contrato.getDataInicio();
+                    LocalDate contratoFim = contrato.getDataFim();
+
+                    return !periodoFim.isBefore(contratoInicio) && !periodoInicio.isAfter(contratoFim);
+                })
+                .sorted((c1, c2) -> c1.getDataInicio().compareTo(c2.getDataInicio())) 
+                .collect(Collectors.toList());
     }
 }
