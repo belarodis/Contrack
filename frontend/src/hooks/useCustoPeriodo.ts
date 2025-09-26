@@ -1,21 +1,35 @@
+// hooks/useCustoPeriodo.ts
 import { useEffect, useState } from "react";
-import {getCustoPeriodo} from "../services/projeto.service";
+import { getCustoPeriodo } from "../services/projeto.service";
 
-export function useCustoPeriodo(id: number | null) {
-    const [custo, setCusto] = useState<number | null>(null);
+export function useCustoPeriodo(
+    projetoId: number | null,
+    inicio: string,
+    fim: string
+) {
+    const [valor, setValor] = useState<number | null>(null);
 
     useEffect(() => {
-        if (id === null) return;
+        // só busca se tudo estiver ok
+        if (!projetoId || !inicio || !fim) {
+            setValor(null);
+            return;
+        }
+        if (fim < inicio) {
+            setValor(null);
+            return;
+        }
 
         (async () => {
             try {
-                const valor = await getCustoPeriodo(id);
-                setCusto(valor);
+                const v = await getCustoPeriodo(projetoId, inicio, fim);
+                setValor(v);
             } catch (e) {
-                console.error("Erro na hook useCustoPeriodo()", e);
+                console.error("Erro em useCustoPeriodo()", e);
+                setValor(null);
             }
         })();
-    }, [id]);
+    }, [projetoId, inicio, fim]);
 
-    return custo;
+    return valor;
 }
