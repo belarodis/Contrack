@@ -14,7 +14,7 @@ function Projetos({ onSelectProjeto, selectedId }: ProjetosProps) {
   const [openModal, setOpenModal] = useState(false);
   const [projetos, setProjetos] = useState<any[]>([]);
 
-  // fechar modal + recarregar lista
+
   function handleClose() {
     setOpenModal(false);
     carregarProjetos();

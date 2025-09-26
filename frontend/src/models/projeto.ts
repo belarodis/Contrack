@@ -6,7 +6,6 @@ export type ProjetoCreateDTO = {
 };
 
 export type ProjetoStatus = "Finalizado" | "Em espera" | "Incompleto" | "Ativo";
-
 export type ProjetoViewDTO = {
   id: number;
   nome: string;
