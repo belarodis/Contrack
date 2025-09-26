@@ -46,7 +46,7 @@ function App() {
             className="w-1/2 min-w-0 flex flex-col gap-[38px] overflow-hidden"
           >
             <Alocacoes selectedId={selectedProjeto}/>
-            <Custos />
+            <Custos projetoId={selectedProjeto} />
           </motion.div>
         )}
       </AnimatePresence>

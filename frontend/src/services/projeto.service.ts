@@ -11,3 +11,9 @@ export async function createProjetos(dto: ProjetoCreateDTO): Promise<ProjetoView
   console.log(res.data.nome)
   return res.data;
 }
+
+export async function getCustoProjeto(id: number): Promise<number> {
+    const res = await api.get<number>(`/projetos/custo-total/${id}`);
+    console.log(res.data);
+    return res.data;
+}
