@@ -46,12 +46,15 @@ function Projetos({ onSelectProjeto, selectedId }: ProjetosProps) {
         </div>
         <ButtonPlus onClick={() => setOpenModal(true)} />
       </div>
-      <div className="grid grid-cols-2 gap-[1vw] pt-[15px] overflow-y-auto pr-[20px]">
+      <div className="grid grid-cols-2 gap-[1vw] pl-[5px] pb-[20px] pt-[15px] pr-[20px] overflow-y-auto ">
         {projetos.map((p) => (
           <Projeto
             key={p.id}
             id={p.id}
             nome={p.nome}
+            descricao={p.descricao}
+            dataInicio={p.dataInicio}
+            dataFim={p.dataFim}
             onSelect={onSelectProjeto}
             selectedId={selectedId}
             status={p.status}
