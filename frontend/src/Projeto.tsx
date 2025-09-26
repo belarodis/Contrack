@@ -4,12 +4,14 @@ interface ProjetoProps {
     id: number;
     nome: string;
     descricao: string;
+    dataInicio: string;
+    dataFim: string;
     onSelect: (id: number | null) => void;
     selectedId: number | null;
     status: ProjetoStatus;
 }
 
-function Projeto({ id, nome, descricao, onSelect, selectedId, status }: ProjetoProps) {
+function Projeto({ id, nome, descricao, dataInicio, dataFim,  onSelect, selectedId, status }: ProjetoProps) {
     const isSelected = id === selectedId;
     return (
         <div
@@ -26,11 +28,11 @@ function Projeto({ id, nome, descricao, onSelect, selectedId, status }: ProjetoP
             <div className="flex flex-col gap-[5px] h-fit">
                 <h3 className="text-[18px] font-bold">{nome}</h3>
                 <div className="flex flex-row gap-[15px]">
-                    <p className="text-[13px]">
-                        <span className="text-[#C2CCD0]">Início: </span>22/09
+                    <p className="text-[12px]">
+                        <span className="text-[#C2CCD0]">Início: </span> {dataInicio}
                     </p>
-                    <p className="text-[13px]">
-                        <span className="text-[#C2CCD0]">Fim: </span>26/09
+                    <p className="text-[12px]">
+                        <span className="text-[#C2CCD0]">Fim: </span> {dataFim}
                     </p>
                 </div>
                 <p className="text-[13px]">

@@ -53,6 +53,8 @@ function Projetos({ onSelectProjeto, selectedId }: ProjetosProps) {
             id={p.id}
             nome={p.nome}
             descricao={p.descricao}
+            dataInicio={p.dataInicio}
+            dataFim={p.dataFim}
             onSelect={onSelectProjeto}
             selectedId={selectedId}
             status={p.status}
