@@ -3,6 +3,7 @@ package com.contrack.contrack_app.controllers;
 import com.contrack.contrack_app.dto.create.ProjetoCreateDTO;
 import com.contrack.contrack_app.dto.view.ProjetoViewDTO;
 import com.contrack.contrack_app.mapper.ProjetoMapper;
+import com.contrack.contrack_app.models.Projeto;
 import com.contrack.contrack_app.services.ProjetoService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -43,14 +44,8 @@ public class ProjetoController {
 
     @GetMapping("/custo-total/{id}")
     public ResponseEntity<Double> calcularCustoTotal(@PathVariable Long id) {
-        try {
-            double custo = projetoService.calcularCustoTotal(
-                projetoService.buscarProjetoPorId(id)
-                    .orElseThrow(() -> new IllegalArgumentException("Projeto não encontrado."))
-            );
-            return ResponseEntity.ok(custo);
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.notFound().build();
-        }
+        Projeto projeto = projetoService.buscarProjetoPorIdOrThrow(id);
+        double custo = projetoService.calcularCustoTotal(projeto);
+        return ResponseEntity.ok(custo);
     }
 }

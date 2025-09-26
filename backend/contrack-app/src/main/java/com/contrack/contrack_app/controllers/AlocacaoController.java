@@ -1,5 +1,3 @@
-// src/main/java/com/contrack/contrack_app/controllers/AlocacaoController.java
-
 package com.contrack.contrack_app.controllers;
 
 import com.contrack.contrack_app.dto.create.AlocacaoCreateDTO;
@@ -26,12 +24,9 @@ public class AlocacaoController {
     // Endpoint para criar uma nova alocação
     @PostMapping
     public ResponseEntity<AlocacaoViewDTO> criarAlocacao(@RequestBody AlocacaoCreateDTO dto) {
-        try {
-            AlocacaoViewDTO novaAlocacao = alocacaoService.criarAlocacao(dto);
-            return ResponseEntity.ok(novaAlocacao);
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.badRequest().build();
-        }
+        // Exceções (404, 409, 400) são tratadas pelo GlobalExceptionHandler
+        AlocacaoViewDTO novaAlocacao = alocacaoService.criarAlocacao(dto);
+        return ResponseEntity.ok(novaAlocacao);
     }
 
     // Endpoint para buscar todas as alocações
@@ -52,11 +47,8 @@ public class AlocacaoController {
     
     @GetMapping("/projeto/{projetoId}")
     public ResponseEntity<List<AlocacaoViewDTO>> buscarAlocacoesPorProjeto(@PathVariable Long projetoId) {
-        try {
-            List<AlocacaoViewDTO> alocacoes = alocacaoService.buscarAlocacoesPorProjetoId(projetoId);
-            return ResponseEntity.ok(alocacoes);
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.notFound().build();
-        }
+        // Exceção (404) é tratada pelo GlobalExceptionHandler (lançada no Service)
+        List<AlocacaoViewDTO> alocacoes = alocacaoService.buscarAlocacoesPorProjetoId(projetoId);
+        return ResponseEntity.ok(alocacoes);
     }
 }
