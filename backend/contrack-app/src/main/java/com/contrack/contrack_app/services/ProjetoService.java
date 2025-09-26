@@ -12,9 +12,11 @@ import com.contrack.contrack_app.repositories.interfaces.IProjetoRepository;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Service
 public class ProjetoService {
@@ -50,15 +52,73 @@ public class ProjetoService {
     }
 
     public double calcularCustoTotal(Projeto projeto) {
-        double custoTotal = 0.0;
-        Iterable<Alocacao> alocacoes = alocacaoRepository.findByProjeto(projeto);
-        for (Alocacao alocacao : alocacoes) {
-            double salarioHora = contratoService.getContratoAtivo(alocacao.getPessoa())
-                    .map(Contrato::getSalarioHora)
-                    .orElse(0.0);
-            custoTotal += salarioHora * alocacao.getHorasSemana();
+    double custoTotal = 0.0;
+    Iterable<Alocacao> alocacoes = alocacaoRepository.findByProjeto(projeto);
+
+    for (Alocacao alocacao : alocacoes) {
+        // Buscar TODOS os contratos válidos durante o período do projeto
+        List<Contrato> contratos = contratoService.getContratosNosPeriodo(
+                alocacao.getPessoa(), projeto.getDataInicio(), projeto.getDataFim());
+
+        for (Contrato contrato : contratos) {
+            // Calcular período de interseção entre contrato e projeto
+            LocalDate contratoInicio = contrato.getDataInicio().isAfter(projeto.getDataInicio()) ? 
+                                      contrato.getDataInicio() : projeto.getDataInicio();
+            LocalDate contratoFim = contrato.getDataFim().isBefore(projeto.getDataFim()) ? 
+                                   contrato.getDataFim() : projeto.getDataFim();
+
+            if (!contratoInicio.isAfter(contratoFim)) {
+                long diasValidos = ChronoUnit.DAYS.between(contratoInicio, contratoFim) + 1;
+                double semanasValidas = diasValidos / 7.0;
+
+                double horasUteis = alocacao.getHorasSemana() * (5.0 / 7.0);
+                custoTotal += contrato.getSalarioHora() * horasUteis * semanasValidas;
+            }
         }
-        return custoTotal;
+    }
+
+    return custoTotal;
+}
+
+public double calcularCustoPorPeriodo(Projeto projeto, LocalDate periodoInicio, LocalDate periodoFim) {
+    double custoTotal = 0.0;
+    Iterable<Alocacao> alocacoes = alocacaoRepository.findByProjeto(projeto);
+
+    // Verificar período válido do projeto
+    LocalDate inicioReal = periodoInicio.isBefore(projeto.getDataInicio()) ? projeto.getDataInicio() : periodoInicio;
+    LocalDate fimReal = periodoFim.isAfter(projeto.getDataFim()) ? projeto.getDataFim() : periodoFim;
+
+    if (inicioReal.isAfter(fimReal)) {
+        return 0.0;
+    }
+
+    for (Alocacao alocacao : alocacoes) {
+        // Buscar TODOS os contratos válidos durante o período
+        List<Contrato> contratos = contratoService.getContratosNosPeriodo(
+                alocacao.getPessoa(), inicioReal, fimReal);
+
+        for (Contrato contrato : contratos) {
+            // Calcular período de interseção entre contrato, projeto e período solicitado
+            LocalDate contratoInicio = contrato.getDataInicio();
+            LocalDate contratoFim = contrato.getDataFim();
+
+            // Pegar a maior data de início e menor data de fim
+            LocalDate inicioValido = Stream.of(inicioReal, contratoInicio)
+                    .max(LocalDate::compareTo).get();
+            LocalDate fimValido = Stream.of(fimReal, contratoFim)
+                    .min(LocalDate::compareTo).get();
+
+            if (!inicioValido.isAfter(fimValido)) {
+                long diasValidos = ChronoUnit.DAYS.between(inicioValido, fimValido) + 1;
+                double semanasValidas = diasValidos / 7.0;
+
+                double horasUteis = alocacao.getHorasSemana() * (5.0 / 7.0);
+                custoTotal += contrato.getSalarioHora() * horasUteis * semanasValidas;
+            }
+        }
+    }
+
+    return custoTotal;
     }
 
     public boolean isProjetoAtivo(Projeto projeto) {

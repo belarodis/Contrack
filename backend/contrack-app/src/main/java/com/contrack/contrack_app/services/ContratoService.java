@@ -78,7 +78,35 @@ public class ContratoService {
         List<Contrato> contratos = contratoRepository.findByPessoaOrderByDataFimDesc(pessoa);
         return contratos.stream()
                 .filter(contrato -> !LocalDate.now().isBefore(contrato.getDataInicio()) &&
-                                     !LocalDate.now().isAfter(contrato.getDataFim()))
+                        !LocalDate.now().isAfter(contrato.getDataFim()))
                 .findFirst();
+    }
+    
+    public Optional<Contrato> getContratoAtivoDurantePeriodo(Pessoa pessoa, LocalDate periodoInicio,
+            LocalDate periodoFim) {
+        List<Contrato> contratos = contratoRepository.findByPessoaOrderByDataFimDesc(pessoa);
+        return contratos.stream()
+                .filter(contrato -> {
+                    // Verifica se há interseção entre período do contrato e período solicitado
+                    LocalDate contratoInicio = contrato.getDataInicio();
+                    LocalDate contratoFim = contrato.getDataFim();
+
+                    return !periodoFim.isBefore(contratoInicio) && !periodoInicio.isAfter(contratoFim);
+                })
+                .findFirst();
+    }
+
+    public List<Contrato> getContratosNosPeriodo(Pessoa pessoa, LocalDate periodoInicio, LocalDate periodoFim) {
+        List<Contrato> contratos = contratoRepository.findByPessoaOrderByDataFimDesc(pessoa);
+        return contratos.stream()
+                .filter(contrato -> {
+                    // Verifica se há interseção entre período do contrato e período solicitado
+                    LocalDate contratoInicio = contrato.getDataInicio();
+                    LocalDate contratoFim = contrato.getDataFim();
+
+                    return !periodoFim.isBefore(contratoInicio) && !periodoInicio.isAfter(contratoFim);
+                })
+                .sorted((c1, c2) -> c1.getDataInicio().compareTo(c2.getDataInicio())) // Ordenar por data início
+                .collect(Collectors.toList());
     }
 }
