@@ -1,16 +1,18 @@
-function Alocacao(){
-    return(
-        <div className="flex flex-col bg-[#0D3445] h-[18vh] w-full rounded-[2vh] text-white py-[12px] px-[16px] gap-[5px] font-semibold">
-            <h3 className="text-[18px] font-bold">Henrique Schultz</h3>
-            <div className="flex flex-row gap-[15px]">
-                <p className="text-[13px]"><span className="text-[#C2CCD0]">Inicio: </span>22/09</p>
-                <p className="text-[13px]"><span className="text-[#C2CCD0]">Fim: </span>26/09</p>
-            </div>
-            <p className="text-[13px]">20h/semana</p>
-            <p className="text-[13px]">R$6,00/h</p>
-
-        </div>
-    );
+type AlocacaoProps = {
+  horasSemana: number;
+  nomePessoa: string;
+  tipoPerfil: string;
 };
+
+function Alocacao({nomePessoa, tipoPerfil, horasSemana} : AlocacaoProps) {
+  return (
+    <div className="flex flex-col bg-[#0D3445] h-[18vh] w-full rounded-[2vh] text-white py-[12px] px-[16px] gap-[5px] font-semibold">
+      <h3 className="text-[18px] font-bold">{nomePessoa}</h3>
+      <div className="flex flex-row gap-[15px]"></div>
+      <p className="text-[13px]">{tipoPerfil}</p>
+      <p className="text-[13px]">{`${horasSemana}h/semana`}</p>
+    </div>
+  );
+}
 
 export default Alocacao;

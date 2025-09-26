@@ -13,5 +13,6 @@ export type ContratoViewDTO = {
   horasSemana: number;
   salarioHora: number;
   pessoaId: number;
+  pessoaNome: string;
   status: string;
 };

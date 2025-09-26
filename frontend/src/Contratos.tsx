@@ -1,22 +1,20 @@
 import ButtonPlus from "./components/buttons/ButtonPlus.tsx";
 import Contrato from "./Contrato";
 import { useContratos } from "./hooks/useContratos";
-import { usePessoas } from "./hooks/usePessoas";
-import {useState} from "react";
+import { useState } from "react";
 import Overlay from "./components/modals/Overlay.tsx";
 import CriarContrato from "./components/modals/CriarContrato.tsx";
 
 function Contratos() {
   const contratos = useContratos();
-  const pessoas = usePessoas();
 
-    const [openModal, setOpenModal] = useState(false);
+  const [openModal, setOpenModal] = useState(false);
 
   return (
     <div className="bg-[#0A2439] flex flex-col rounded-[25px] px-[48px] pt-[30px] basis-2/3 min-h-0">
       <div className="flex flex-row justify-between w-full h-fit items-center">
         <h1 className="text-[#9DFFD9] text-[36px] font-semibold">Contratos</h1>
-          <ButtonPlus onClick={() => setOpenModal(true)}/>
+        <ButtonPlus onClick={() => setOpenModal(true)} />
       </div>
 
       {/* grid com scroll */}
@@ -24,9 +22,7 @@ function Contratos() {
         {contratos.map((c) => (
           <div key={c.id} className="w-full h-full flex">
             <Contrato
-              nome={
-                pessoas.find((p) => p.id === c.pessoaId)?.nome ?? "Desconhecido"
-              }
+              pessoaNome={c.pessoaNome}
               dataInicio={c.dataInicio}
               dataFim={c.dataFim}
               horasSemana={c.horasSemana}
@@ -35,11 +31,11 @@ function Contratos() {
           </div>
         ))}
       </div>
-        {openModal && (
-            <Overlay onClose={() => setOpenModal(false)}>
-                <CriarContrato onClose={() => setOpenModal(false)} />
-            </Overlay>
-        )}
+      {openModal && (
+        <Overlay onClose={() => setOpenModal(false)}>
+          <CriarContrato onClose={() => setOpenModal(false)} />
+        </Overlay>
+      )}
     </div>
   );
 }
