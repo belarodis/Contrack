@@ -5,10 +5,14 @@ import com.contrack.contrack_app.dto.view.ProjetoViewDTO;
 import com.contrack.contrack_app.mapper.ProjetoMapper;
 import com.contrack.contrack_app.models.Projeto;
 import com.contrack.contrack_app.services.ProjetoService;
+
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.util.List;
+
 @CrossOrigin(origins = "http://localhost:5173")
 @RestController
 @RequestMapping("/projetos")
@@ -42,10 +46,23 @@ public class ProjetoController {
                 .orElse(ResponseEntity.notFound().build());
     }
 
-    @GetMapping("/custo-total/{id}")
+    @GetMapping("/{id}/custo-total")
     public ResponseEntity<Double> calcularCustoTotal(@PathVariable Long id) {
         Projeto projeto = projetoService.buscarProjetoPorIdOrThrow(id);
+        
         double custo = projetoService.calcularCustoTotal(projeto);
+        return ResponseEntity.ok(custo);
+    }
+
+    @GetMapping("/{id}/custo-periodo")
+    public ResponseEntity<Double> calcularCustoPorPeriodo(
+            @PathVariable Long id,
+            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate dataInicio,
+            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate dataFim) {
+        
+        Projeto projeto = projetoService.buscarProjetoPorIdOrThrow(id);
+        
+        double custo = projetoService.calcularCustoPorPeriodo(projeto, dataInicio, dataFim);
         return ResponseEntity.ok(custo);
     }
 }

@@ -34,6 +34,7 @@ public class AlocacaoService {
         this.alocacaoMapper = alocacaoMapper;
     }
 
+    // ... (Métodos buscarAlocacoes, buscarAlocacaoPorId, buscarAlocacoesPorProjetoId - SEM ALTERAÇÃO) ...
     public List<AlocacaoViewDTO> buscarAlocacoes() {
         return alocacaoRepository.findAll()
                 .stream()
@@ -58,13 +59,10 @@ public class AlocacaoService {
 
     public AlocacaoViewDTO criarAlocacao(AlocacaoCreateDTO dto) {
         Pessoa pessoa = pessoaService.buscarPessoaPorId(dto.pessoaId())
-                // Lança 404
                 .orElseThrow(() -> new ResourceNotFoundException("Pessoa", dto.pessoaId()));
         Projeto projeto = projetoService.buscarProjetoPorId(dto.projetoId())
-                // Lança 404
                 .orElseThrow(() -> new ResourceNotFoundException("Projeto", dto.projetoId()));
         Perfil perfil = perfilService.buscarPerfilPorId(dto.perfilId())
-                // Lança 404
                 .orElseThrow(() -> new ResourceNotFoundException("Perfil", dto.perfilId()));
 
         Alocacao novaAlocacao = new Alocacao();
@@ -73,29 +71,44 @@ public class AlocacaoService {
         novaAlocacao.setPerfil(perfil);
         novaAlocacao.setHorasSemana(dto.horasSemana());
 
-        // Regra 1: Valida se a pessoa já está alocada no projeto
+        // REGRA 1: Uma pessoa não pode ser alocada no mesmo projeto.
         List<Alocacao> alocacoesNoProjeto = alocacaoRepository.findByPessoaAndProjeto(novaAlocacao.getPessoa(), novaAlocacao.getProjeto());
         if (!alocacoesNoProjeto.isEmpty()) {
-            // Lança 409
             throw new ResourceConflictException("Essa pessoa já está alocada neste projeto.");
         }
 
-        // Regra 2: Valida o total de horas semanais em projetos ativos
-        int horasAtuaisAlocadasEmProjetosAtivos = alocacaoRepository.findByPessoa(novaAlocacao.getPessoa())
+        // REGRA 2: Um projeto deve ter no MÁXIMO um gerente.
+        if (perfil.getTipo() == Perfil.TipoPerfil.gerente) {
+            // Conta quantos gerentes já existem neste projeto
+            long numGerentesExistentes = alocacaoRepository.findByProjeto(projeto).stream()
+                .filter(aloc -> aloc.getPerfil().getTipo() == Perfil.TipoPerfil.gerente)
+                .count();
+
+            if (numGerentesExistentes >= 1) {
+                throw new ResourceConflictException("O projeto já possui um Gerente alocado. Limite de um Gerente por projeto.");
+            }
+        }
+
+        // REGRA 3: Limite de 40 horas semanais em projetos ativos ou incompletos.
+        int horasAtuaisAlocadasEmProjetosAtivos = alocacaoRepository.findByPessoa(pessoa)
                 .stream()
                 .filter(aloc -> {
-                    ProjetoViewDTO projetoDto = projetoService.buscarProjetoPorIdComStatus(aloc.getProjeto().getId())
-                            .orElse(null);
-                    return projetoDto != null && (projetoDto.status().equals("Ativo") || projetoDto.status().equals("Incompleto"));
+                    Optional<ProjetoViewDTO> projetoDtoOpt = projetoService.buscarProjetoPorIdComStatus(aloc.getProjeto().getId());
+                    if (!projetoDtoOpt.isPresent()) return false;
+                    
+                    String status = projetoDtoOpt.get().status();
+                    return "Ativo".equals(status) || "Incompleto".equals(status);
                 })
                 .mapToInt(Alocacao::getHorasSemana)
                 .sum();
 
         if ((horasAtuaisAlocadasEmProjetosAtivos + novaAlocacao.getHorasSemana()) > 40) {
-            // Lança 400
-            throw new InvalidDataException("O total de horas semanais para esta pessoa excederá 40, considerando apenas projetos ativos/incompletos.");
+            throw new InvalidDataException(
+                "O total de horas semanais para esta pessoa excederá o limite de 40 horas, considerando projetos ativos/incompletos. Horas atuais: " + 
+                horasAtuaisAlocadasEmProjetosAtivos
+            );
         }
-
+        
         Alocacao alocacaoSalva = alocacaoRepository.save(novaAlocacao);
         return alocacaoMapper.toDto(alocacaoSalva);
     }
