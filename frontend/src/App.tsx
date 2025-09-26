@@ -6,6 +6,7 @@ import Pessoas from "./Pessoas";
 import Projetos from "./Projetos";
 import Custos from "./Custos";
 
+
 function App() {
   const [selectedProjeto, setSelectedProjeto] = useState<null | number>(null);
 
@@ -45,7 +46,7 @@ function App() {
             layout
             className="w-1/2 min-w-0 flex flex-col gap-[38px] overflow-hidden"
           >
-            <Alocacoes selectedId={selectedProjeto}/>
+            <Alocacoes selectedId={selectedProjeto} />
             <Custos />
           </motion.div>
         )}

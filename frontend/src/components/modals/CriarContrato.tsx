@@ -3,7 +3,9 @@ import { FormCard } from "../forms/FormCard";
 import { FormField } from "../forms/FormField";
 import { type Option } from "../forms/FormDropdown";
 import { usePessoas } from "../../hooks/usePessoas";
+import { toast } from "react-toastify";
 import { createContrato } from "../../services/contratos.service"; // 👈 importa o service
+import axios from "axios";
 
 function containsOnlyDigits(str: string): boolean {
   return /^[0-9]+$/.test(str);
@@ -44,8 +46,20 @@ export default function CriarContrato({ onClose }: { onClose?: () => void }) {
       };
       await createContrato(dto); // POST
       onClose?.();
-    } catch (e) {
-      console.error("Erro ao criar contrato", e);
+      toast.success("Contrato criado com sucesso!");
+    } catch (err) {
+      if (axios.isAxiosError(err)) {
+        const status = err.response?.status;
+        const msg =
+          (err.response?.data as any)?.message ?? "Erro ao criar contrato.";
+        if (status === 409) {
+          toast.error(msg); // vai mostrar "O novo contrato se sobrepõe a um contrato existente."
+        } else {
+          toast.error(`Erro${status ? ` ${status}` : ""}: ${msg}`);
+        }
+      } else {
+        toast.error("Erro inesperado. 🤯");
+      }
     } finally {
       setSaving(false);
     }

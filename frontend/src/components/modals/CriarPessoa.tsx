@@ -1,3 +1,4 @@
+import { toast } from "react-toastify"; // só se já estiver instalado
 import { useState } from "react";
 import { createPessoa } from "../../services/pessoas.service";
 import { FormCard } from "../forms/FormCard";
@@ -13,15 +14,25 @@ export function CriarPessoa({ onClose }: CriarPessoaProps) {
 
   const isValid = nome.trim().length >= 2;
   const canSave = isValid && !saving;
-
   async function handleSave() {
     if (!canSave) return;
     setSaving(true);
     try {
       await createPessoa({ nome }); // POST
-      onClose?.();
-    } catch (e) {
-      console.error("Erro ao criar pessoa", e);
+      toast.success("Pessoa criada com sucesso!"); // feedback positivo
+      onClose?.(); // fecha modal
+    } catch (e: any) {
+      if (e.response) {
+        // erro do backend (exceções customizadas)
+        const msg =
+          e.response.data?.message || "Erro inesperado ao criar pessoa";
+        toast.error(`Erro: ${msg}`);
+        console.error("Erro do servidor:", msg);
+      } else {
+        // erro de rede ou outro
+        toast.error("Falha na conexão com o servidor");
+        console.error("Erro de conexão:", e);
+      }
     } finally {
       setSaving(false);
     }
@@ -34,11 +45,7 @@ export function CriarPessoa({ onClose }: CriarPessoaProps) {
         if (e.key === "Enter" && canSave) handleSave();
       }}
     >
-      <FormCard
-        title="Criar Pessoa"
-        onExit={onClose}
-        onSave={handleSave}
-      >
+      <FormCard title="Criar Pessoa" onExit={onClose} onSave={handleSave}>
         <FormField
           label="Nome"
           htmlFor="nome"
@@ -52,7 +59,7 @@ export function CriarPessoa({ onClose }: CriarPessoaProps) {
             autoFocus
           />
         </FormField>
-        
+
         {saving && <p className="text-sm text-gray-400 mt-2">Salvando...</p>}
       </FormCard>
     </div>
