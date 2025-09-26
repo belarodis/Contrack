@@ -14,7 +14,10 @@ function App() {
       {/* Coluna esquerda */}
       <div className="w-1/2 min-w-0">
         {/* agora Projetos recebe uma função de callback */}
-        <Projetos onSelectProjeto={setSelectedProjeto} />
+        <Projetos
+          onSelectProjeto={setSelectedProjeto}
+          selectedId={selectedProjeto}
+        />
       </div>
 
       {/* Coluna direita com transição */}
@@ -34,7 +37,7 @@ function App() {
           </motion.div>
         ) : (
           <motion.div
-            key="detalhes"
+            key={selectedProjeto} // 👈 muda a key a cada projeto selecionado
             initial={{ opacity: 0, x: -30 }}
             animate={{ opacity: 1, x: 0 }}
             exit={{ opacity: 0, x: 30 }}
@@ -42,7 +45,7 @@ function App() {
             layout
             className="w-1/2 min-w-0 flex flex-col gap-[38px] overflow-hidden"
           >
-            <Alocacoes />
+            <Alocacoes selectedId={selectedProjeto}/>
             <Custos />
           </motion.div>
         )}

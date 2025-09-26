@@ -6,10 +6,11 @@ import Overlay from "./components/modals/Overlay.tsx";
 import CriarProjeto from "./components/modals/CriarProjeto.tsx";
 
 interface ProjetosProps {
-  onSelectProjeto: (id: number) => void;
+  onSelectProjeto: (id: number | null) => void;
+  selectedId: number | null;
 }
 
-function Projetos({ onSelectProjeto }: ProjetosProps) {
+function Projetos({ onSelectProjeto, selectedId }: ProjetosProps) {
     const [openModal, setOpenModal] = useState(false);
     const projetos = useProjetos();
 
@@ -31,6 +32,7 @@ function Projetos({ onSelectProjeto }: ProjetosProps) {
             id={p.id}
             nome={p.nome}
             onSelect={onSelectProjeto}
+            selectedId={selectedId}
           />
         ))}
       </div>

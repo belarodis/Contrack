@@ -45,7 +45,7 @@ public class AlocacaoController {
                 .orElse(ResponseEntity.notFound().build());
     }
     
-    @GetMapping("/alocacoes/{projetoId}")
+    @GetMapping("/projeto/{projetoId}")
     public ResponseEntity<List<AlocacaoViewDTO>> buscarAlocacoesPorProjeto(@PathVariable Long projetoId) {
         // Exceção (404) é tratada pelo GlobalExceptionHandler (lançada no Service)
         List<AlocacaoViewDTO> alocacoes = alocacaoService.buscarAlocacoesPorProjetoId(projetoId);
