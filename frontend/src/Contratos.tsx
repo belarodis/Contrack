@@ -40,7 +40,7 @@ function Contratos() {
       </div>
 
       {/* grid com scroll */}
-      <div className="grid grid-cols-2 gap-[1vw] pt-[15px] h-full min-h-0 overflow-y-auto px-[10px]">
+      <div className="grid grid-cols-2 gap-[1vw] pt-[15px] pl-[5px] pb-[20px] pr-[5px] h-full min-h-0 overflow-y-auto px-[10px]">
         {contratos.map((c) => (
           <div key={c.id} className="w-full h-full flex">
             <Contrato
