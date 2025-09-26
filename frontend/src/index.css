@@ -41,13 +41,13 @@ html {
 
 /* "Thumb" (parte que arrasta) */
 ::-webkit-scrollbar-thumb {
-  background-color: #9dffd9; /* cor do thumb */
+  background-color: #9dffd917; /* cor do thumb */
   border-radius: 8px;
   border: 2px solid #0a2439; /* cria espaço entre thumb e track */
 }
 
 /* Hover no thumb */
 ::-webkit-scrollbar-thumb:hover {
-  background-color: #66ccaa;
+  background-color: #66ccaa73;
 }
 
