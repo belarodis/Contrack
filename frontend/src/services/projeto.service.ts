@@ -17,3 +17,5 @@ export async function getCustoProjeto(id: number): Promise<number> {
     console.log(res.data);
     return res.data;
 }
+
+
