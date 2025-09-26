@@ -1,12 +1,14 @@
 import { useState } from "react";
 import { useCustoProjeto } from "./hooks/useCustoProjeto.ts";
 import {CalendarFormField} from "./components/forms/CalendarFormField.tsx";
+import {useCustoPeriodo} from "./hooks/useCustoPeriodo.ts";
 
 
 function Custos({ projetoId }: { projetoId: number | null }) {
     const custo = useCustoProjeto(projetoId);
     const [inicio, setInicio] = useState("");
     const [fim, setFim] = useState("");
+    const custoPeriodo = useCustoPeriodo(custo);
 
     return (
         <div className="bg-[#0A2439] flex flex-col rounded-[25px] px-[32px] pt-[25px] pb-[20px] basis-1/3 min-h-0">
@@ -36,7 +38,9 @@ function Custos({ projetoId }: { projetoId: number | null }) {
 
                 <div className="flex flex-col bg-[#0D3445] rounded-[16px] px-[20px] py-[15px] flex-1">
                     <p className="text-[#9DFFD9] text-[18px] font-medium mb-[8px]">Por período:</p>
-                    <p className="text-white text-[28px] font-bold">R$ 6.341,00</p>
+                    <p className="text-white text-[28px] font-bold">
+                        {custoPeriodo != null ? `R$ ${custoPeriodo.toLocaleString("pt-BR",{minimumFractionDigits:2})}` : "—"}
+                    </p>
                 </div>
             </div>
         </div>

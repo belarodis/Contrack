@@ -13,7 +13,13 @@ export async function createProjetos(dto: ProjetoCreateDTO): Promise<ProjetoView
 }
 
 export async function getCustoProjeto(id: number): Promise<number> {
-    const res = await api.get<number>(`/projetos/custo-total/${id}`);
+    const res = await api.get<number>(`/projetos/${id}/custo-total`);
+    console.log(res.data);
+    return res.data;
+}
+
+export async function getCustoPeriodo(id: number): Promise<number> {
+    const res = await api.get<number>(`/projetos/${id}/custo-periodo`);
     console.log(res.data);
     return res.data;
 }
